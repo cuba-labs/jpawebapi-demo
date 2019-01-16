@@ -10,13 +10,13 @@
         <param-value>
             classpath:com/haulmont/demo/jpawebapi/app.properties
             /WEB-INF/local.app.properties
-            "file:${catalina.base}/conf/app-core/local.app.properties"
+            "file:${catalina.base}/conf/refapp-core/local.app.properties"
         </param-value>
     </context-param>
     <!--Application components-->
     <context-param>
         <param-name>appComponents</param-name>
-        <param-value>com.haulmont.cuba com.haulmont.addon.jpawebapi</param-value>
+        <param-value>com.haulmont.cuba</param-value>
     </context-param>
     <listener>
         <listener-class>com.haulmont.cuba.core.sys.AppContextLoader</listener-class>

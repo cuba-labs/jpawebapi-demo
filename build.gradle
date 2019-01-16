@@ -1,3 +1,4 @@
+
 buildscript {
     ext.cubaVersion = '7.0-SNAPSHOT'
     repositories {
@@ -21,11 +22,12 @@ buildscript {
     }
 }
 
-def modulePrefix = 'app'
+def modulePrefix = 'refapp'
 
 def globalModule = project(":${modulePrefix}-global")
 def coreModule = project(":${modulePrefix}-core")
 def webModule = project(":${modulePrefix}-web")
+def portalModule = project(":${modulePrefix}-portal")
 
 def servletApi = 'javax.servlet:javax.servlet-api:3.1.0'
 
@@ -37,25 +39,36 @@ cuba {
         version = '0.1'
         isSnapshot = true
     }
+
+//    tomcat {
+//        dir = "$project.rootDir/deploy/tomcat"
+//    }
+
     tomcat {
-        dir = "$project.rootDir/deploy/tomcat"
+        dir = project.rootProject.hasProperty('demoToken') ?
+                project.rootDir.absolutePath + '/deploy/tomcat_' + project.rootProject['demoToken']
+                : "$project.rootDir/deploy/tomcat"
     }
 }
 
 dependencies {
     appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
-    appComponent("com.haulmont.addon.jpawebapi:jpawebapi-global:0.1-SNAPSHOT")
 }
 
 def hsql = 'org.hsqldb:hsqldb:2.2.9'
 
-configure([globalModule, coreModule, webModule]) {
+configure([globalModule, coreModule, webModule, portalModule]) {
     apply(plugin: 'java')
+    apply(plugin: 'groovy')
     apply(plugin: 'maven')
     apply(plugin: 'cuba')
 
     dependencies {
         testCompile('junit:junit:4.12')
+        testCompile('org.jmockit:jmockit:1.39')
+        testCompile('org.spockframework:spock-core:1.2-groovy-2.5') {
+            exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
+        }
     }
 
     task sourceJar(type: Jar) {
@@ -90,6 +103,36 @@ configure(coreModule) {
         testRuntime(hsql)
     }
 
+    test {
+        scanForTestClasses = false
+        includes = ['**/*Test.class']
+        excludes = ['**/*PostgresTest.class', '**/*HsqlTest.class', '**/*MssqlTest.class',
+                    '**/*OracleTest.class', '**/*MysqlTest.class', '**/*FetchModeTest.class']
+
+        systemProperties = [
+                'logback.configurationFile': System.getProperty('logback.configurationFile'),
+                'jdk.attach.allowAttachSelf' : 'true'
+        ]
+    }
+
+    task testFetchMode(type: Test) {
+        scanForTestClasses = false
+        includes = ['com/haulmont/refapp/core/v6/FetchModeTest.class']
+
+        systemProperties = [
+                'logback.configurationFile': System.getProperty('logback.configurationFile')
+        ]
+    }
+
+    task testEntityCache(type: Test) {
+        scanForTestClasses = false
+        includes = ['com/haulmont/refapp/entity_cache/EntityCacheTestSuite.class']
+
+        systemProperties = [
+                'logback.configurationFile': System.getProperty('logback.configurationFile')
+        ]
+    }
+
     task cleanConf(description: 'Cleans up conf directory') {
         doLast {
             def dir = new File(cuba.tomcat.dir, "/conf/${modulePrefix}-core")
@@ -109,7 +152,7 @@ configure(coreModule) {
     task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
         dbms = 'hsql'
         host = 'localhost:9010'
-        dbName = 'jpawebapidemo'
+        dbName = 'refapp'
         dbUser = 'sa'
         dbPassword = ''
     }
@@ -117,7 +160,7 @@ configure(coreModule) {
     task updateDb(dependsOn: assembleDbScripts, description: 'Updates local database', type: CubaDbUpdate) {
         dbms = 'hsql'
         host = 'localhost:9010'
-        dbName = 'jpawebapidemo'
+        dbName = 'refapp'
         dbUser = 'sa'
         dbPassword = ''
     }
@@ -171,13 +214,73 @@ configure(webModule) {
     }
 }
 
+configure(portalModule) {
+    dependencies {
+        compileOnly(servletApi)
+        compile(globalModule)
+
+        jdbc('org.postgresql:postgresql:42.2.4')
+        testCompile('com.haulmont.masquerade:masquerade-connector:1.0-SNAPSHOT')
+        testCompile('com.jayway.jsonpath:json-path:2.4.0')
+        testCompile("httpunit:httpunit:1.7")
+        testCompile('org.apache.httpcomponents:httpmime:4.5.6')
+    }
+
+    def webappName = "${modulePrefix}-portal"
+    def resourcesDir = "$cuba.tomcat.dir/webapps/$webappName/resources"
+    def ftlDir = "$cuba.tomcat.dir/webapps/$webappName/WEB-INF/templates"
+
+    task deploy(dependsOn: assemble, type: CubaDeployment) {
+        appName = webappName
+        appJars(modulePrefix + '-global', modulePrefix + '-portal')
+    }
+
+    task deployStatic() {
+        doLast {
+            copy {
+                from file('web/resources')
+                include '**/*.css'
+                include '**/*.js'
+                include '**/*.png'
+                include '**/*.gif'
+                include '**/*.jpg'
+                into resourcesDir
+            }
+            copy {
+                from file('web/WEB-INF/templates')
+                include '**/*.ftl'
+                into ftlDir
+            }
+        }
+    }
+
+    task cleanStatic() {
+        doLast {
+            delete resourcesDir
+            delete ftlDir
+        }
+    }
+
+    task webArchive(type: Zip) {
+        from file('web')
+        from file("$buildDir/web")
+        exclude '**/web.xml', '**/app.properties'
+        classifier = 'web'
+    }
+
+    artifacts {
+        archives webArchive
+    }
+}
+
 task undeploy(type: Delete, dependsOn: ":${modulePrefix}-web:cleanConf") {
     delete("$cuba.tomcat.dir/shared")
     delete("$cuba.tomcat.dir/webapps/${modulePrefix}-core")
     delete("$cuba.tomcat.dir/webapps/${modulePrefix}")
+    delete("$cuba.tomcat.dir/webapps/${modulePrefix}-portal")
 }
 
-task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefix}-web:deploy"], description: 'Redeploys applications and restarts local Tomcat') {
+task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefix}-web:deploy", ":${modulePrefix}-portal:deploy"], description: 'Redeploys applications and restarts local Tomcat') {
     doLast {
         ant.waitfor(maxwait: 6, maxwaitunit: 'second', checkevery: 2, checkeveryunit: 'second') {
             not {

@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
-    <persistence-unit name="JPAWebAPIDemo" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="JpaWebApiDemo" transaction-type="RESOURCE_LOCAL">
 
+        <class>com.haulmont.demo.jpawebapi.core.entity.Address</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Colour</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Model</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Plant</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Driver</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.DriverCallsign</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.DriverGroup</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.CarToken</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Car</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.CarGarageToken</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.CarDetails</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.CarDocumentation</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.CarDetailsItem</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.AllocatedCar</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.DriverAllocation</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Repair</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.InsuranceCase</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Doc</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Point</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Line</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.SampleCard</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.TaskCard</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.MyTaskCard</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.DriverLicense</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.PricingRegion</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Manager</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Place</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Seller</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Currency</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Shelf</class>
+
+        <class>com.haulmont.demo.jpawebapi.core.entity.Card</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.ExtDoc</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.ExtDriver</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.ExtModel</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.ExtPlant</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.CustomExtPlant</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.ExtPlace</class>
+
+        <class>com.haulmont.demo.jpawebapi.core.entity.SamplePlatformEntity</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.SampleProductEntity</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.SampleExtensionEntity</class>
+
+        <class>com.haulmont.demo.jpawebapi.core.entity.elementclass.CustomsBundle</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.elementclass.CustomsCard</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.elementclass.CustomsDoc</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.elementclass.CustomsContract</class>
+
+        <class>com.haulmont.demo.jpawebapi.core.entity.Debtor</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Case</class>
+
+        <class>com.haulmont.demo.jpawebapi.core.entity.CustomerGroup</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Customer</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.Company</class>
+
+        <class>com.haulmont.demo.jpawebapi.core.entity.identity.IdentityCustomer</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.identity.IdentityOrder</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.identity.IdentityOrderLine</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.identity.IdentityOrderLineTag</class>
+
+        <class>com.haulmont.demo.jpawebapi.core.entity.compkey.CompKey</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.compkey.CompKeyBaseEntity</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.compkey.CompKeyCustomer</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.compkey.CompKeyOrder</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.compkey.CompKeyOrderLine</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.compkey.CompKeyOrderLineTag</class>
+
+        <class>com.haulmont.demo.jpawebapi.core.entity.TimeApiEntity</class>
     </persistence-unit>
 </persistence>

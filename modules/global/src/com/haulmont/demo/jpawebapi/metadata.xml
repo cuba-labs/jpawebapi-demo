@@ -1,6 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--<metadata xmlns="http://schemas.haulmont.com/cuba/metadata.xsd">-->
+
+    <!--<metadata-model root-package="com.haulmont.demo.jpawebapi" namespace="refapp"/>-->
+
+<!--</metadata>-->
+
 <metadata xmlns="http://schemas.haulmont.com/cuba/metadata.xsd">
+<datatypes>
+    <datatype id="geocoordinate" class="com.haulmont.demo.jpawebapi.core.entity.GeoCoordinateDatatype"
+              format="#0.000000" decimalSeparator="." groupingSeparator=""/>
 
-    <metadata-model root-package="com.haulmont.demo.jpawebapi" namespace="jpawebapidemo"/>
+    <!-- override default datatype for Double to provide format with 4 digits -->
+    <datatype id="double" class="com.haulmont.chile.core.datatypes.impl.DoubleDatatype"
+              default="true"
+              format="0.####" decimalSeparator="." groupingSeparator=""/>
+</datatypes>
 
+<metadata-model namespace="refapp"
+                root-package="com.haulmont.demo.jpawebapi">
+    <class>com.haulmont.demo.jpawebapi.core.entity.TransientDriver</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.SampleEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.SampleHierarchicalEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.UserContainer</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.sample.TestEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.sample.CalendarEventEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.sample.TokenListEntity</class>
+    <class store="mem1">com.haulmont.demo.jpawebapi.core.entity.multidb.Mem1Customer</class>
+    <class store="mem1">com.haulmont.demo.jpawebapi.core.entity.multidb.Mem1LongIdEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.sample.TestFileEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.postcont.BaseEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.postcont.ChildEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.postcont.ExtChildEntity</class>
+    <class>com.haulmont.demo.jpawebapi.core.entity.RefappNotPersistentStringIdEntity</class>
+</metadata-model>
+
+<annotations>
+    <entity class="com.haulmont.demo.jpawebapi.core.entity.Driver">
+        <annotation name="com.haulmont.cuba.core.entity.annotation.TrackEditScreenHistory">
+            <attribute name="value" value="true" datatype="boolean"/>
+        </annotation>
+
+        <property name="name">
+            <annotation name="length" value="200"/>
+        </property>
+
+        <property name="driverGroup">
+            <annotation name="com.haulmont.cuba.core.entity.annotation.Lookup">
+                <attribute name="type" class="com.haulmont.cuba.core.entity.annotation.LookupType" value="DROPDOWN"/>
+                <attribute name="actions" datatype="string">
+                    <value>lookup</value>
+                    <value>open</value>
+                </attribute>
+            </annotation>
+        </property>
+    </entity>
+
+    <entity class="com.haulmont.demo.jpawebapi.core.entity.Shelf">
+        <annotation name="com.haulmont.cuba.core.entity.annotation.EnableRestore">
+            <attribute name="value" value="false" datatype="boolean"/>
+        </annotation>
+    </entity>
+</annotations>
 </metadata>
