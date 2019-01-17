@@ -26,11 +26,9 @@
     <class>com.haulmont.demo.jpawebapi.core.entity.sample.CalendarEventEntity</class>
     <class>com.haulmont.demo.jpawebapi.core.entity.sample.TokenListEntity</class>
     <class store="mem1">com.haulmont.demo.jpawebapi.core.entity.multidb.Mem1Customer</class>
-    <class store="mem1">com.haulmont.demo.jpawebapi.core.entity.multidb.Mem1LongIdEntity</class>
     <class>com.haulmont.demo.jpawebapi.core.entity.sample.TestFileEntity</class>
     <class>com.haulmont.demo.jpawebapi.core.entity.postcont.BaseEntity</class>
     <class>com.haulmont.demo.jpawebapi.core.entity.postcont.ChildEntity</class>
-    <class>com.haulmont.demo.jpawebapi.core.entity.postcont.ExtChildEntity</class>
     <class>com.haulmont.demo.jpawebapi.core.entity.RefappNotPersistentStringIdEntity</class>
 </metadata-model>
 
