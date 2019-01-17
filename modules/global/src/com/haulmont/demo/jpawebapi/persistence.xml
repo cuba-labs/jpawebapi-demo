@@ -69,6 +69,10 @@
         <class>com.haulmont.demo.jpawebapi.core.entity.compkey.CompKeyOrderLine</class>
         <class>com.haulmont.demo.jpawebapi.core.entity.compkey.CompKeyOrderLineTag</class>
 
+        <class>com.haulmont.demo.jpawebapi.core.entity.multidb.Db1Customer</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.multidb.Db1Order</class>
+        <class>com.haulmont.demo.jpawebapi.core.entity.multidb.Db1Foo</class>
+
         <class>com.haulmont.demo.jpawebapi.core.entity.TimeApiEntity</class>
     </persistence-unit>
 </persistence>
