@@ -142,7 +142,7 @@ public class DataServiceControllerSecurityFT {
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("/app-portal/api/login",
+        WebResponse response = POST("/refrefapp-portal/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }
@@ -157,7 +157,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void testInvalidSessionId() throws Exception {
-        WebResponse response = GET("app-portal/api/find.json?e=ref$Colour-"
+        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref$Colour-"
                 + colourUuidString + "&s=" + UUID.randomUUID(),
                 "charset=UTF-8");
         assertEquals(HTTP_UNAUTHORIZED, response.getResponseCode());
@@ -166,7 +166,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_permitted_JSON() throws Exception {
         //trying to get entity with permitted read access
-        WebResponse response = GET("app-portal/api/find.json?e=ref$Colour-"
+        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref$Colour-"
                 + colourUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());
@@ -177,7 +177,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_permitted_XML() throws Exception {
         //trying to get entity with permitted read access
-        WebResponse response = GET("app-portal/api/find.xml?e=ref$Colour-"
+        WebResponse response = GET("refrefapp-portal/api/find.xml?e=ref$Colour-"
                 + colourUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         Document xml = builder.parse(new InputSource(new StringReader(response.getText())));
@@ -193,7 +193,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_forbidden_JSON() throws Exception {
         //trying to get entity with forbidden read access
-        WebResponse response = GET("app-portal/api/find.json?e=ref_Car-"
+        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref_Car-"
                 + carUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
@@ -202,7 +202,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_forbidden_XML() throws Exception {
         //trying to get entity with forbidden read access
-        WebResponse response = GET("app-portal/api/find.xml?e=ref_Car-"
+        WebResponse response = GET("refrefapp-portal/api/find.xml?e=ref_Car-"
                 + carUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
@@ -210,7 +210,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void find_attributes_JSON() throws Exception {
-        WebResponse response = GET("app-portal/api/find.json?e=ref_Car-"
+        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref_Car-"
                 + carUuidString + "&s=" + carReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());
@@ -226,7 +226,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void find_attributes_XML() throws Exception {
-        WebResponse xmlResponse = GET("app-portal/api/find.xml?e=ref_Car-" +
+        WebResponse xmlResponse = GET("refrefapp-portal/api/find.xml?e=ref_Car-" +
                 carUuidString + "&s=" + carReadUserSessionId, "charset=UTF-8");
         Document xmlCar = builder.parse(new InputSource(new StringReader(xmlResponse.getText())));
         assertEquals(1, xmlCar.getChildNodes().getLength());
@@ -256,7 +256,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_noPermissions_JSON() throws Exception {
         //trying to get entity without any permissions (should be accessible)
-        WebResponse response = GET("app-portal/api/find.json?e=ref$ExtDriver-"
+        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref$ExtDriver-"
                 + driverUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());
@@ -267,7 +267,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_noPermissions_XML() throws Exception {
         //trying to get entity without any permissions (should be accessible)
-        WebResponse response = GET("app-portal/api/find.xml?e=ref$ExtDriver-"
+        WebResponse response = GET("refapp-portal/api/find.xml?e=ref$ExtDriver-"
                 + driverUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         Document xml = builder.parse(new InputSource(new StringReader(response.getText())));
@@ -282,7 +282,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void query_permitted_JSON() throws Exception {
-        String url = "app-portal/api/query.json?e=ref$Colour&q=select c from ref$Colour c " +
+        String url = "refapp-portal/api/query.json?e=ref$Colour&q=select c from ref$Colour c " +
                 "where c.name = :name&name=Red&" + "s=" + colorReadUserSessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         JSONArray colours = new JSONArray(response.getText());
@@ -293,7 +293,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void query_permitted_XML() throws Exception {
-        String url = "app-portal/api/query.xml?e=ref$Colour&q=select c from ref$Colour c " +
+        String url = "refapp-portal/api/query.xml?e=ref$Colour&q=select c from ref$Colour c " +
                 "where c.name = :name&name=Red&" + "s=" + colorReadUserSessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         Document xml = builder.parse(new InputSource(new StringReader(response.getText())));
@@ -308,7 +308,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void query_forbidden_JSON() throws Exception {
-        String url = "app-portal/api/query.json?e=ref_Car&q=select c from ref_Car c " +
+        String url = "refapp-portal/api/query.json?e=ref_Car&q=select c from ref_Car c " +
                 "where c.vin = :vin&vin=VWV000&" + "s=" + colorReadUserSessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
@@ -316,7 +316,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void query_forbidden_XML() throws Exception {
-        String url = "app-portal/api/query.xml?e=ref_Car&q=select c from ref_Car c " +
+        String url = "refapp-portal/api/query.xml?e=ref_Car&q=select c from ref_Car c " +
                 "where c.vin = :vin&vin=VWV000&" + "s=" + colorReadUserSessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
@@ -324,7 +324,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void query_attributes_JSON() throws Exception {
-        String url = "app-portal/api/query.json?e=ref_Car&q=select c from ref_Car c" +
+        String url = "refapp-portal/api/query.json?e=ref_Car&q=select c from ref_Car c" +
                 "&" + "s=" + carReadUserSessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());
@@ -341,7 +341,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void query_attributes_XML() throws Exception {
-        String url = "app-portal/api/query.xml?e=ref_Car&q=select c from ref_Car c" +
+        String url = "refapp-portal/api/query.xml?e=ref_Car&q=select c from ref_Car c" +
                 "&" + "s=" + carReadUserSessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());
@@ -372,7 +372,7 @@ public class DataServiceControllerSecurityFT {
     public void commit_updateForbidden_JSON() throws Exception {
         String json = prepareJson(DataServiceControllerSecurityFT.class, "modified_colour.json",
                 MapUtils.asMap("$ENTITY-TO_BE_REPLACED_ID$", "ref$Colour-" + colourUuidString));
-        WebResponse response = POST("/app-portal/api/commit?" + "s=" + colorReadUserSessionId,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + colorReadUserSessionId,
                 json, "application/json;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
     }
@@ -382,7 +382,7 @@ public class DataServiceControllerSecurityFT {
         String xmlRequest = prepareXml(DataServiceControllerFT.class, "modified_colour.xml", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref$Colour-" + carUuidString,
                 "$TO_BE_REPLACED_ID$", carUuidString));
-        WebResponse response = POST("/app-portal/api/commit?" + "s=" + colorReadUserSessionId,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + colorReadUserSessionId,
                 xmlRequest, "text/xml;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
     }
@@ -391,7 +391,7 @@ public class DataServiceControllerSecurityFT {
     public void commit_updatePermitted_JSON() throws Exception {
         String json = prepareJson(DataServiceControllerSecurityFT.class, "modified_colour.json",
                 MapUtils.asMap("$ENTITY-TO_BE_REPLACED_ID$", "ref$Colour-" + colourUuidString));
-        WebResponse response = POST("/app-portal/api/commit?" + "s=" + colorUpdateUserSessionId,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + colorUpdateUserSessionId,
                 json, "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref$Colour-" + colourUuidString, res.getJSONObject(0).getString("id"));
@@ -401,7 +401,7 @@ public class DataServiceControllerSecurityFT {
     public void commit_updatePermitted_XML() throws Exception {
         String xmlRequest = prepareXml(DataServiceControllerSecurityFT.class, "modified_colour.xml",
                 MapUtils.asMap("$ENTITY-TO_BE_REPLACED_ID$", "ref$Colour-" + colourUuidString));
-        WebResponse response = POST("/app-portal/api/commit?" + "s=" + colorUpdateUserSessionId,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + colorUpdateUserSessionId,
                 xmlRequest, "text/xml;charset=UTF-8");
         Document xml = builder.parse(new InputSource(new StringReader(response.getText())));
         Node instanceNode = getInstanceNode(xml, 0);
@@ -415,12 +415,12 @@ public class DataServiceControllerSecurityFT {
         UUID newUuid = dirtyData.createColourUuid();
         String json = prepareJson(DataServiceControllerSecurityFT.class, "new_colour.json",
                 MapUtils.asMap("$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Colour-" + newUuid.toString()));
-        WebResponse response = POST("/app-portal/api/commit?" + "s=" + colorReadUserSessionId,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + colorReadUserSessionId,
                 json, "application/json;charset=UTF-8");
 
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
 
-        response = POST("/app-portal/api/commit?" + "s=" + colorUpdateUserSessionId,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorUpdateUserSessionId,
                 json, "application/json;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
     }
@@ -430,12 +430,12 @@ public class DataServiceControllerSecurityFT {
         UUID newUuid = dirtyData.createColourUuid();
         String xmlRequest = prepareXml(DataServiceControllerSecurityFT.class, "new_colour.xml",
                 MapUtils.asMap("$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Colour-" + newUuid.toString()));
-        WebResponse response = POST("/app-portal/api/commit?" + "s=" + colorReadUserSessionId,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + colorReadUserSessionId,
                 xmlRequest, "text/xml;charset=UTF-8");
 
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
 
-        response = POST("/app-portal/api/commit?" + "s=" + colorUpdateUserSessionId,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorUpdateUserSessionId,
                 xmlRequest, "text/xml;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
     }
@@ -446,7 +446,7 @@ public class DataServiceControllerSecurityFT {
         UUID newUuid = dirtyData.createColourUuid();
         String json = prepareJson(DataServiceControllerSecurityFT.class, "new_colour.json",
                 MapUtils.asMap("$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Colour-" + newUuid.toString()));
-        WebResponse response = POST("/app-portal/api/commit?" + "s=" + colorCreateUserSessionId,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + colorCreateUserSessionId,
                 json, "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref$Colour-" + newUuid.toString(), res.getJSONObject(0).getString("id"));
@@ -457,7 +457,7 @@ public class DataServiceControllerSecurityFT {
         UUID newUuid = dirtyData.createColourUuid();
         String xmlRequest = prepareXml(DataServiceControllerSecurityFT.class, "new_colour.xml",
                 MapUtils.asMap("$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Colour-" + newUuid.toString()));
-        WebResponse response = POST("/app-portal/api/commit?" + "s=" + colorCreateUserSessionId,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + colorCreateUserSessionId,
                 xmlRequest, "text/xml;charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());
 
@@ -465,7 +465,7 @@ public class DataServiceControllerSecurityFT {
         Node instanceNode = getInstanceNode(xmlDoc, 0);
         assertFieldValue(instanceNode, "name", "Red");
 
-        response = GET("app-portal/api/find.xml?e=ref$Colour-" + newUuid + "&s=" + colorReadUserSessionId,
+        response = GET("refapp-portal/api/find.xml?e=ref$Colour-" + newUuid + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         Document xmlColour = builder.parse(new InputSource(new StringReader(response.getText())));
         assertEquals(1, xmlColour.getChildNodes().getLength());
@@ -477,7 +477,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void commit_deletePermitted_JSON() throws Exception {
-        WebResponse response = GET("app-portal/api/find.xml?e=ref$Colour-" + colourUuidString +
+        WebResponse response = GET("refapp-portal/api/find.xml?e=ref$Colour-" + colourUuidString +
                 "&s=" + colorDeleteUserSessionId, "charset=UTF-8");
         assertNotNull(response.getText());
         assertFalse(response.getText().isEmpty());
@@ -487,7 +487,7 @@ public class DataServiceControllerSecurityFT {
                 "$TO_BE_REPLACED_ID$", colourUuidString)
         );
 
-        response = POST("/app-portal/api/commit?" + "s=" + colorDeleteUserSessionId, json,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorDeleteUserSessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref$Colour-" + colourUuidString, res.getJSONObject(0).get("id"));
@@ -496,7 +496,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void commit_deletePermitted_XML() throws Exception {
-        WebResponse response = GET("app-portal/api/find.xml?e=ref$Colour-"
+        WebResponse response = GET("refapp-portal/api/find.xml?e=ref$Colour-"
                 + colourUuidString + "&s=" + colorDeleteUserSessionId,
                 "charset=UTF-8");
         assertNotNull(response.getText());
@@ -506,21 +506,21 @@ public class DataServiceControllerSecurityFT {
                 "$TO_BE_REPLACED_ID$", colourUuidString)
         );
 
-        response = POST("/app-portal/api/commit?" + "s=" + colorDeleteUserSessionId, xml,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorDeleteUserSessionId, xml,
                 "text/xml;charset=UTF-8");
         Document xmlDoc = builder.parse(new InputSource(new StringReader(response.getText())));
         Node instanceNode = getInstanceNode(xmlDoc, 0);
         assertFieldValue(instanceNode, "version", "2");
         assertFieldValue(instanceNode, "deletedBy", "colorDeleteUser");
 
-        response = GET("app-portal/api/find.xml?e=ref$Colour-" + colourUuidString
+        response = GET("refapp-portal/api/find.xml?e=ref$Colour-" + colourUuidString
                 + "&s=" + colorDeleteUserSessionId, "charset=UTF-8");
         assertEquals(HTTP_NOT_FOUND, response.getResponseCode());
     }
 
     @Test
     public void commit_deleteForbidden_JSON() throws Exception {
-        WebResponse response = GET("app-portal/api/find.xml?e=ref$Colour-" + colourUuidString +
+        WebResponse response = GET("refapp-portal/api/find.xml?e=ref$Colour-" + colourUuidString +
                 "&s=" + colorDeleteUserSessionId, "charset=UTF-8");
         assertNotNull(response.getText());
         assertFalse(response.getText().isEmpty());
@@ -531,18 +531,18 @@ public class DataServiceControllerSecurityFT {
         );
 
         //update permission should be not enough to delete
-        response = POST("/app-portal/api/commit?" + "s=" + colorUpdateUserSessionId, json,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorUpdateUserSessionId, json,
                 "application/json;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
 
         //create permission should be not enough to delete
-        response = POST("/app-portal/api/commit?" + "s=" + colorCreateUserSessionId, json,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorCreateUserSessionId, json,
                 "application/json;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
 
 
         //read permission should be not enough to delete
-        response = POST("/app-portal/api/commit?" + "s=" + colorReadUserSessionId, json,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorReadUserSessionId, json,
                 "application/json;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
 
@@ -550,7 +550,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void commit_deleteForbidden_XML() throws Exception {
-        WebResponse response = GET("app-portal/api/find.xml?e=ref$Colour-" + colourUuidString +
+        WebResponse response = GET("refapp-portal/api/find.xml?e=ref$Colour-" + colourUuidString +
                 "&s=" + colorDeleteUserSessionId, "charset=UTF-8");
         assertNotNull(response.getText());
         assertFalse(response.getText().isEmpty());
@@ -561,22 +561,22 @@ public class DataServiceControllerSecurityFT {
         );
 
         //update permission should be not enough to delete
-        response = POST("/app-portal/api/commit?" + "s=" + colorUpdateUserSessionId, xml,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorUpdateUserSessionId, xml,
                 "text/xml;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
 
         //create permission should be not enough to delete
-        response = POST("/app-portal/api/commit?" + "s=" + colorCreateUserSessionId, xml,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorCreateUserSessionId, xml,
                 "text/xml;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
 
 
         //read permission should be not enough to delete
-        response = POST("/app-portal/api/commit?" + "s=" + colorReadUserSessionId, xml,
+        response = POST("/refapp-portal/api/commit?" + "s=" + colorReadUserSessionId, xml,
                 "text/xml;charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
     }
-    
+
     private String prepareXml(Class baseClass, String resourceName, Map<String, String> map)
             throws TransformerException, XMLStreamException, IOException, SAXException, XPathExpressionException {
         String xml = IOUtils.toString(baseClass.getResourceAsStream(resourceName));
