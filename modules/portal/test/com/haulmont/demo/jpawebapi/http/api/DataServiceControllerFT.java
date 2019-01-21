@@ -884,7 +884,7 @@ public class DataServiceControllerFT {
         String json = prepareFile("new_car.json", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref_Car-" + newUuid)
         );
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref_Car-" + newUuid.toString(), res.getJSONObject(0).getString("id"));
@@ -899,7 +899,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Repair-" + repairUuid,
                 "$CAR-TO_BE_REPLACED_ID$", "ref_Car-" + newUuid.toString()));
 
-        response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         res = new JSONArray(response.getText());
         assertEquals("ref$Repair-" + repairUuid.toString(), res.getJSONObject(0).getString("id"));
@@ -913,7 +913,7 @@ public class DataServiceControllerFT {
                 "$TO_BE_REPLACED_ID$", newUuid.toString())
         );
 
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceNodes = document.selectNodes("/instances/instance");
@@ -936,7 +936,7 @@ public class DataServiceControllerFT {
         String json = prepareFile("new_seller.json", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Seller-" + newId)
         );
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref$Seller-" + newId.toString(), res.getJSONObject(0).getString("id"));
@@ -954,7 +954,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Seller-" + newId,
                 "$TO_BE_REPLACED_ID$", newId.toString())
         );
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -976,7 +976,7 @@ public class DataServiceControllerFT {
     @Test
     public void commit_insertInstance_stringId_JSON() throws Exception {
         String json = prepareFile("new_currency.json", Collections.emptyMap());
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref$Currency-{usd}", res.getJSONObject(0).getString("id"));
@@ -1023,7 +1023,7 @@ public class DataServiceControllerFT {
         String json = prepareFile("new_car.json", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref_Car")
         );
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         String id = res.getJSONObject(0).getString("id");
@@ -1040,7 +1040,7 @@ public class DataServiceControllerFT {
                 "$TO_BE_REPLACED_ID$", "NEW")
         );
 
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1058,7 +1058,7 @@ public class DataServiceControllerFT {
         String json = prepareFile("new_seller.json", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Seller")
         );
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         String id = res.getJSONObject(0).getString("id");
@@ -1074,7 +1074,7 @@ public class DataServiceControllerFT {
                 "$TO_BE_REPLACED_ID$", "NEW")
         );
 
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1100,7 +1100,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-COLOUR_ID$", "NEW-ref$Colour-" + colorUuid.toString(),
                 "$COLOUR_ID$", "ref$Colour-" + colorUuid.toString()
         ));
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals(3, res.length());
@@ -1119,7 +1119,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-COLOUR_ID$", "NEW-ref$Colour-" + colorUuid.toString(),
                 "$COLOUR_ID$", "ref$Colour-" + colorUuid.toString()
         ));
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
 
@@ -1138,7 +1138,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-COLOUR_ID$", "NEW-ref$Colour-" + colorUuid.toString(),
                 "$COLOUR_ID$", "ref$Colour-" + colorUuid.toString()
         ));
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, carsXml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, carsXml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1180,7 +1180,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-COLOUR_ID$", "NEW-ref$Colour-" + colorUuid.toString(),
                 "$COLOUR_ID$", colorUuid.toString()
         ));
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, carsXml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, carsXml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1208,7 +1208,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-ref$Driver-" + newUuid,
                 "$TO_BE_REPLACED_ID$", newUuid.toString())
         );
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
 
         JSONArray res = new JSONArray(response.getText());
@@ -1230,7 +1230,7 @@ public class DataServiceControllerFT {
                 "$TO_BE_REPLACED_ID$", newUuid.toString())
         );
 
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1257,7 +1257,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref_Car-" + carUuidString,
                 "$TO_BE_REPLACED_ID$", carUuidString)
         );
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref_Car-" + carUuidString, res.getJSONObject(0).getString("id"));
@@ -1280,7 +1280,7 @@ public class DataServiceControllerFT {
         String json = prepareFile("modify_model_null_field.json", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref$Model-" + modelUuidString)
         );
-        POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
 
         response = GET(apiPath + "/api/find.json?e=ref$Model-" + modelUuidString + "&s=" + sessionId,
@@ -1302,7 +1302,7 @@ public class DataServiceControllerFT {
         String xml = prepareFile("modify_model_null_field.xml", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref$Model-" + modelUuidString)
         );
-        POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
 
         response = GET(apiPath + "/api/find.xml?e=ref$Model-" + modelUuidString + "&s=" + sessionId,
@@ -1326,7 +1326,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref_Car-" + carUuidString,
                 "$VIEW_NAME$", "carEdit")
         );
-        POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
 
         response = GET(apiPath + "/api/find.json?e=ref_Car-" + carUuidString + "-carEdit&s=" + sessionId,
@@ -1343,7 +1343,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref_Car-" + carUuidString,
                 "$VIEW_NAME$", "carEdit")
         );
-        POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
 
         WebResponse response = GET(apiPath + "/api/find.xml?e=ref_Car-" + carUuidString + "-carEdit&s=" + sessionId,
@@ -1361,7 +1361,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref_Car-" + carUuidString,
                 "$VIEW_NAME$", "carEdit")
         );
-        POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
 
         WebResponse response = GET(apiPath + "/api/find.xml?e=ref_Car-" + carUuidString + "-carEdit&s=" + sessionId,
@@ -1379,7 +1379,7 @@ public class DataServiceControllerFT {
                 "$TO_BE_REPLACED_ID$", carUuidString)
         );
 
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1408,7 +1408,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref_Car-" + carUuidString,
                 "$TO_BE_REPLACED_ID$", carUuidString)
         );
-        response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref_Car-" + carUuidString, res.getJSONObject(0).getString("id"));
@@ -1431,7 +1431,7 @@ public class DataServiceControllerFT {
         String xml = prepareFile("removed_car.xml", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref_Car-" + carUuidString,
                 "$TO_BE_REPLACED_ID$", carUuidString));
-        response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1459,7 +1459,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref_Car-" + carUuidString,
                 "$TO_BE_REPLACED_ID$", carUuidString)
         );
-        response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref_Car-" + carUuidString, res.getJSONObject(0).getString("id"));
@@ -1484,7 +1484,7 @@ public class DataServiceControllerFT {
         String xml = prepareFile("soft_removed_entity.xml", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref$Model-" + modelUuidString,
                 "$TO_BE_REPLACED_ID$", modelUuidString));
-        response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1570,7 +1570,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "ref_Car-" + carUuidString,
                 "$TO_BE_REPLACED_ID$", carUuidString)
         );
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("ref_Car-" + carUuidString, res.getJSONObject(0).getString("id"));
@@ -1590,7 +1590,7 @@ public class DataServiceControllerFT {
                 "$TO_BE_REPLACED_ID$", carUuidString)
         );
 
-        WebResponse response = POST("/refapp/jpawebapi/api/commit?" + "s=" + sessionId, xml,
+        WebResponse response = POST("/refapp-portal/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -1645,7 +1645,7 @@ public class DataServiceControllerFT {
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("/refapp/jpawebapi/api/login",
+        WebResponse response = POST("/refapp-portal/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }

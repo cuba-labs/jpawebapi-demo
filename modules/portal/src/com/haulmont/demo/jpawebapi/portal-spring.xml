@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:task="http://www.springframework.org/schema/task">
 
+
     <!--cuba_PortalAnonymousSessionHolder-->
 
     <bean id="anonymousSessionPingScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">

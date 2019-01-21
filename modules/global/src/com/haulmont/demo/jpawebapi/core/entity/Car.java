@@ -55,44 +55,44 @@ public class Car extends CategorizedEntity implements Versioned, Creatable, Upda
     @JoinColumn(name = "COLOUR_ID")
     private Colour colour;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MODEL_ID")
-    @Lookup(type = LookupType.SCREEN)
-    private Model model;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "MODEL_ID")
+//    @Lookup(type = LookupType.SCREEN)
+//    private Model model;
 
-    @OneToMany(mappedBy = "car")
-    @Composition
-    @OnDelete(DeletePolicy.CASCADE)
-    private Set<DriverAllocation> driverAllocations;
+//    @OneToMany(mappedBy = "car")
+//    @Composition
+//    @OnDelete(DeletePolicy.CASCADE)
+//    private Set<DriverAllocation> driverAllocations;
+//
+//    @OneToMany(mappedBy = "car")
+//    @Composition
+//    @OnDelete(DeletePolicy.CASCADE)
+//    private Set<InsuranceCase> insuranceCases;
+//
+//    @OneToMany(mappedBy = "car")
+//    @OrderBy("createTs")
+//    @Composition
+//    @OnDelete(DeletePolicy.CASCADE)
+//    private List<Repair> repairs;
+//
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "car")
+//    @Composition
+//    @OnDelete(DeletePolicy.CASCADE)
+//    protected CarDetails details;
+//
+//
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @Composition
+//    @OnDelete(DeletePolicy.CASCADE)
+//    @JoinColumn(name = "CAR_DOCUMENTATION_ID")
+//    protected CarDocumentation carDocumentation;
 
-    @OneToMany(mappedBy = "car")
-    @Composition
-    @OnDelete(DeletePolicy.CASCADE)
-    private Set<InsuranceCase> insuranceCases;
-
-    @OneToMany(mappedBy = "car")
-    @OrderBy("createTs")
-    @Composition
-    @OnDelete(DeletePolicy.CASCADE)
-    private List<Repair> repairs;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "car")
-    @Composition
-    @OnDelete(DeletePolicy.CASCADE)
-    protected CarDetails details;
-
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @Composition
-    @OnDelete(DeletePolicy.CASCADE)
-    @JoinColumn(name = "CAR_DOCUMENTATION_ID")
-    protected CarDocumentation carDocumentation;
-
-    // for tests only
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TOKEN_ID")
-    @OnDelete(DeletePolicy.CASCADE)
-    protected CarToken token;
+//    // for tests only
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "TOKEN_ID")
+//    @OnDelete(DeletePolicy.CASCADE)
+//    protected CarToken token;
 
     // Test meta property enhancing in persistent entity
 
@@ -106,9 +106,9 @@ public class Car extends CategorizedEntity implements Versioned, Creatable, Upda
     @Transient
     protected Integer repairCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SELLER_ID")
-    protected Seller seller;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "SELLER_ID")
+//    protected Seller seller;
 
     @Valid
     @ManyToOne(fetch = FetchType.LAZY)
@@ -212,45 +212,45 @@ public class Car extends CategorizedEntity implements Versioned, Creatable, Upda
         this.colour = colour;
     }
 
-    public Model getModel() {
-        return model;
-    }
+//    public Model getModel() {
+//        return model;
+//    }
 
-    public void setModel(Model model) {
-        this.model = model;
-    }
+//    public void setModel(Model model) {
+//        this.model = model;
+//    }
 
-    public Set<DriverAllocation> getDriverAllocations() {
-        return driverAllocations;
-    }
+//    public Set<DriverAllocation> getDriverAllocations() {
+//        return driverAllocations;
+//    }
 
-    public void setDriverAllocations(Set<DriverAllocation> driverAllocations) {
-        this.driverAllocations = driverAllocations;
-    }
+//    public void setDriverAllocations(Set<DriverAllocation> driverAllocations) {
+//        this.driverAllocations = driverAllocations;
+//    }
 
-    public List<Repair> getRepairs() {
-        return repairs;
-    }
+//    public List<Repair> getRepairs() {
+//        return repairs;
+//    }
 
-    public void setRepairs(List<Repair> repairs) {
-        this.repairs = repairs;
-    }
+//    public void setRepairs(List<Repair> repairs) {
+//        this.repairs = repairs;
+//    }
 
-    public CarDetails getDetails() {
-        return details;
-    }
+//    public CarDetails getDetails() {
+//        return details;
+//    }
 
-    public void setDetails(CarDetails details) {
-        this.details = details;
-    }
+//    public void setDetails(CarDetails details) {
+//        this.details = details;
+//    }
 
-    public CarToken getToken() {
-        return token;
-    }
+//    public CarToken getToken() {
+//        return token;
+//    }
 
-    public void setToken(CarToken token) {
-        this.token = token;
-    }
+//    public void setToken(CarToken token) {
+//        this.token = token;
+//    }
 
     // Test meta property enhancing in persistent entity
 
@@ -282,13 +282,13 @@ public class Car extends CategorizedEntity implements Versioned, Creatable, Upda
 
     // References with non-UUID primary keys
 
-    public Seller getSeller() {
-        return seller;
-    }
+//    public Seller getSeller() {
+//        return seller;
+//    }
 
-    public void setSeller(Seller seller) {
-        this.seller = seller;
-    }
+//    public void setSeller(Seller seller) {
+//        this.seller = seller;
+//    }
 
     public Currency getCurrency() {
         return currency;
@@ -306,19 +306,19 @@ public class Car extends CategorizedEntity implements Versioned, Creatable, Upda
         this.currencyCode = currencyCode;
     }
 
-    public Set<InsuranceCase> getInsuranceCases() {
-        return insuranceCases;
-    }
+//    public Set<InsuranceCase> getInsuranceCases() {
+//        return insuranceCases;
+//    }
 
-    public void setInsuranceCases(Set<InsuranceCase> insuranceCases) {
-        this.insuranceCases = insuranceCases;
-    }
+//    public void setInsuranceCases(Set<InsuranceCase> insuranceCases) {
+//        this.insuranceCases = insuranceCases;
+//    }
 
-    public CarDocumentation getCarDocumentation() {
-        return carDocumentation;
-    }
+//    public CarDocumentation getCarDocumentation() {
+//        return carDocumentation;
+//    }
 
-    public void setCarDocumentation(CarDocumentation carDocumentation) {
-        this.carDocumentation = carDocumentation;
-    }
+//    public void setCarDocumentation(CarDocumentation carDocumentation) {
+//        this.carDocumentation = carDocumentation;
+//    }
 }

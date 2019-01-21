@@ -142,7 +142,7 @@ public class DataServiceControllerSecurityFT {
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("/refrefapp-portal/api/login",
+        WebResponse response = POST("/refapp-portal/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }
@@ -157,7 +157,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void testInvalidSessionId() throws Exception {
-        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref$Colour-"
+        WebResponse response = GET("refapp-portal/api/find.json?e=ref$Colour-"
                 + colourUuidString + "&s=" + UUID.randomUUID(),
                 "charset=UTF-8");
         assertEquals(HTTP_UNAUTHORIZED, response.getResponseCode());
@@ -166,7 +166,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_permitted_JSON() throws Exception {
         //trying to get entity with permitted read access
-        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref$Colour-"
+        WebResponse response = GET("refapp-portal/api/find.json?e=ref$Colour-"
                 + colourUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());
@@ -177,7 +177,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_permitted_XML() throws Exception {
         //trying to get entity with permitted read access
-        WebResponse response = GET("refrefapp-portal/api/find.xml?e=ref$Colour-"
+        WebResponse response = GET("refapp-portal/api/find.xml?e=ref$Colour-"
                 + colourUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         Document xml = builder.parse(new InputSource(new StringReader(response.getText())));
@@ -193,7 +193,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_forbidden_JSON() throws Exception {
         //trying to get entity with forbidden read access
-        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref_Car-"
+        WebResponse response = GET("refapp-portal/api/find.json?e=ref_Car-"
                 + carUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
@@ -202,7 +202,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_forbidden_XML() throws Exception {
         //trying to get entity with forbidden read access
-        WebResponse response = GET("refrefapp-portal/api/find.xml?e=ref_Car-"
+        WebResponse response = GET("refapp-portal/api/find.xml?e=ref_Car-"
                 + carUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_FORBIDDEN, response.getResponseCode());
@@ -210,7 +210,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void find_attributes_JSON() throws Exception {
-        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref_Car-"
+        WebResponse response = GET("refapp-portal/api/find.json?e=ref_Car-"
                 + carUuidString + "&s=" + carReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());
@@ -226,7 +226,7 @@ public class DataServiceControllerSecurityFT {
 
     @Test
     public void find_attributes_XML() throws Exception {
-        WebResponse xmlResponse = GET("refrefapp-portal/api/find.xml?e=ref_Car-" +
+        WebResponse xmlResponse = GET("refapp-portal/api/find.xml?e=ref_Car-" +
                 carUuidString + "&s=" + carReadUserSessionId, "charset=UTF-8");
         Document xmlCar = builder.parse(new InputSource(new StringReader(xmlResponse.getText())));
         assertEquals(1, xmlCar.getChildNodes().getLength());
@@ -256,7 +256,7 @@ public class DataServiceControllerSecurityFT {
     @Test
     public void find_noPermissions_JSON() throws Exception {
         //trying to get entity without any permissions (should be accessible)
-        WebResponse response = GET("refrefapp-portal/api/find.json?e=ref$ExtDriver-"
+        WebResponse response = GET("refapp-portal/api/find.json?e=ref$ExtDriver-"
                 + driverUuidString + "&s=" + colorReadUserSessionId,
                 "charset=UTF-8");
         assertEquals(HTTP_OK, response.getResponseCode());

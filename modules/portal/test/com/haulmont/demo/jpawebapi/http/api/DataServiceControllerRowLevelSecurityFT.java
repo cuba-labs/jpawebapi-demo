@@ -150,7 +150,7 @@ public class DataServiceControllerRowLevelSecurityFT {
 
     @Test
     public void queryJSON() throws Exception {
-        String url = "app-portal/api/query.json?e=ref$Colour&q=select c from ref$Colour c&s=" + sessionId;
+        String url = "refrefapp-portal//api/query.json?e=ref$Colour&q=select c from ref$Colour c&s=" + sessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         JSONArray colours = new JSONArray(response.getText());
         assertEquals(1, colours.length());
@@ -158,7 +158,7 @@ public class DataServiceControllerRowLevelSecurityFT {
         assertEquals("Black", colourObject.getString("name"));
         assertNotNull(colourObject.getString("__securityToken"));
 
-        url = "app-portal/api/query.json?e=ref_Car&q=select c from ref_Car c where c.id = '" + redCarUuidString + "'&s=" + sessionId + "&view=carEdit";
+        url = "refapp-portal/api/query.json?e=ref_Car&q=select c from ref_Car c where c.id = '" + redCarUuidString + "'&s=" + sessionId + "&view=carEdit";
         response = GET(url, "charset=UTF-8");
         JSONArray cars = new JSONArray(response.getText());
         assertEquals(1, cars.length());
@@ -183,7 +183,7 @@ public class DataServiceControllerRowLevelSecurityFT {
     @Test
     public void findJSON() throws Exception {
         try {
-            WebResponse response = GET("app-portal/api/find.json?e=ref$Colour-" + redColourUuidString + "&s=" + sessionId,
+            WebResponse response = GET("refapp-portal/api/find.json?e=ref$Colour-" + redColourUuidString + "&s=" + sessionId,
                     "charset=UTF-8");
             fail();
         } catch (HttpNotFoundException e) {
@@ -191,7 +191,7 @@ public class DataServiceControllerRowLevelSecurityFT {
             assertEquals(404, e.getResponseCode());
         }
 
-        WebResponse response = GET("app-portal/api/find.json?e=ref_Car-" + redCarUuidString + "-carEdit&s=" + sessionId,
+        WebResponse response = GET("refapp-portal/api/find.json?e=ref_Car-" + redCarUuidString + "-carEdit&s=" + sessionId,
                 "charset=UTF-8");
         JSONObject carObject = new JSONObject(response.getText());
 
@@ -212,7 +212,7 @@ public class DataServiceControllerRowLevelSecurityFT {
 
     @Test
     public void queryXml() throws Exception {
-        String url = "app-portal/api/query.xml?e=ref$Colour&q=select c from ref$Colour c&s=" + sessionId;
+        String url = "refapp-portal/api/query.xml?e=ref$Colour&q=select c from ref$Colour c&s=" + sessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List colours = document.selectNodes("/instances/instance");
@@ -222,7 +222,7 @@ public class DataServiceControllerRowLevelSecurityFT {
         assertEquals("Black", getFieldValue(colourObject, "name"));
         assertNotNull(colourObject.element("__securityToken"));
 
-        url = "app-portal/api/query.xml?e=ref_Car&q=select c from ref_Car c where c.id = '" + redCarUuidString + "'&s=" + sessionId + "&view=carEdit";
+        url = "refapp-portal/api/query.xml?e=ref_Car&q=select c from ref_Car c where c.id = '" + redCarUuidString + "'&s=" + sessionId + "&view=carEdit";
         response = GET(url, "charset=UTF-8");
         document = Dom4j.readDocument(response.getText());
         List cars = document.selectNodes("/instances/instance");
@@ -247,7 +247,7 @@ public class DataServiceControllerRowLevelSecurityFT {
     @Test
     public void findXml() throws Exception {
         try {
-            WebResponse response = GET("app-portal/api/find.xml?e=ref$Colour-" + redColourUuidString + "&s=" + sessionId,
+            WebResponse response = GET("refapp-portal/api/find.xml?e=ref$Colour-" + redColourUuidString + "&s=" + sessionId,
                     "charset=UTF-8");
             fail();
         } catch (HttpNotFoundException e) {
@@ -255,7 +255,7 @@ public class DataServiceControllerRowLevelSecurityFT {
             assertEquals(404, e.getResponseCode());
         }
 
-        WebResponse response = GET("app-portal/api/find.xml?e=ref_Car-" + redCarUuidString + "-carEdit&s=" + sessionId,
+        WebResponse response = GET("refapp-portal/api/find.xml?e=ref_Car-" + redCarUuidString + "-carEdit&s=" + sessionId,
                 "charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List cars = document.selectNodes("/instances/instance");
@@ -282,7 +282,7 @@ public class DataServiceControllerRowLevelSecurityFT {
         loginJSON.put("username", login);
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
-        WebResponse response = POST("/app-portal/api/login",
+        WebResponse response = POST("/refapp-portal/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }
@@ -291,7 +291,7 @@ public class DataServiceControllerRowLevelSecurityFT {
         if (sessionId == null)
             return;
         try {
-            GET("app-portal/api/logout?session=" + sessionId, "charset=UTF-8");
+            GET("refapp-portal/api/logout?session=" + sessionId, "charset=UTF-8");
         } catch (Exception e) {
             System.out.println("Error on logout: " + e);
         }

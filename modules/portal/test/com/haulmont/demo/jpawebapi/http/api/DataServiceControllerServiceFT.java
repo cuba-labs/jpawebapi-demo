@@ -489,7 +489,7 @@ public class DataServiceControllerServiceFT {
         loginJSON.put("username", login);
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
-        WebResponse response = POST("/app-portal/api/login",
+        WebResponse response = POST("/refrefapp-portal/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }
@@ -498,7 +498,7 @@ public class DataServiceControllerServiceFT {
         if (sessionId == null)
             return;
         try {
-            GET("app-portal/api/logout?session=" + sessionId, "charset=UTF-8");
+            GET("refapp-portal/api/logout?session=" + sessionId, "charset=UTF-8");
         } catch (Exception e) {
             System.out.println("Error on logout: " + e);
         }
@@ -516,7 +516,7 @@ public class DataServiceControllerServiceFT {
     private WebResponse invokeServiceMethodGet(String type, String methodName, String... params) throws IOException, SAXException {
         String serviceName = PortalTestService.NAME;
         StringBuilder sb = new StringBuilder();
-        sb.append("app-portal/api/service.").append(type);
+        sb.append("refapp-portal/api/service.").append(type);
         sb.append("?s=").append(sessionId)
                 .append("&service=").append(serviceName)
                 .append("&method=").append(methodName);
@@ -529,7 +529,7 @@ public class DataServiceControllerServiceFT {
 
     private WebResponse invokeServiceMethodPost(String fileName, Map<String, String> replacements, String type) throws IOException, SAXException {
         StringBuilder sb = new StringBuilder();
-        sb.append("app-portal/api/service")
+        sb.append("refapp-portal/api/service")
                 .append("?s=").append(sessionId);
         String fileContent = getFileContent(fileName, replacements);
         return POST(sb.toString(), fileContent, type);
@@ -547,7 +547,7 @@ public class DataServiceControllerServiceFT {
     private WebResponse invokeServiceMethodWithTypes(String type, String methodName, String[] paramValues, String[] paramTypes) throws IOException, SAXException {
         String serviceName = PortalTestService.NAME;
         StringBuilder sb = new StringBuilder();
-        sb.append("app-portal/api/service.").append(type);
+        sb.append("refapp-portal/api/service.").append(type);
         sb.append("?s=").append(sessionId)
                 .append("&service=").append(serviceName)
                 .append("&method=").append(methodName);
