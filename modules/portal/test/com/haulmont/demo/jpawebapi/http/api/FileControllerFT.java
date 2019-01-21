@@ -48,7 +48,7 @@ public class FileControllerFT {
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("/refapp-portal/api/login",
+        WebResponse response = POST("refapp-portal/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }

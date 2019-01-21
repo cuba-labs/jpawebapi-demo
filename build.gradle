@@ -219,7 +219,7 @@ configure(portalModule) {
         compileOnly(servletApi)
         compile(globalModule)
 
-        jdbc('org.postgresql:postgresql:42.2.4')
+        testCompile('org.postgresql:postgresql:42.2.4')
         testCompile('com.haulmont.masquerade:masquerade-connector:1.0-SNAPSHOT')
         testCompile('com.jayway.jsonpath:json-path:2.4.0')
         testCompile("httpunit:httpunit:1.7")
