@@ -55,7 +55,7 @@ dependencies {
     appComponent('com.haulmont.addon.jpawebapi:jpawebapi-global:0.1-SNAPSHOT')
 }
 
-def hsql = 'org.hsqldb:hsqldb:2.2.9'
+def postgres = 'org.postgresql:postgresql:42.2.4'
 
 configure([globalModule, coreModule, webModule, portalModule]) {
     apply(plugin: 'java')
@@ -87,6 +87,10 @@ configure(globalModule) {
             enabled = true
         }
     }
+
+    dependencies {
+        compile("httpunit:httpunit:1.7")
+    }
 }
 
 configure(coreModule) {
@@ -99,8 +103,8 @@ configure(coreModule) {
     dependencies {
         compile(globalModule)
         compileOnly(servletApi)
-        jdbc(hsql)
-        testRuntime(hsql)
+        jdbc(postgres)
+        testRuntime(postgres)
     }
 
     test {
@@ -150,19 +154,19 @@ configure(coreModule) {
     }
 
     task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
-        dbms = 'hsql'
-        host = 'localhost:9010'
-        dbName = 'refapp'
-        dbUser = 'sa'
-        dbPassword = ''
+        dbms = 'postgres'
+        host = 'localhost'
+        dbName = 'refapp_6'
+        dbUser = 'root'
+        dbPassword = 'root'
     }
 
     task updateDb(dependsOn: assembleDbScripts, description: 'Updates local database', type: CubaDbUpdate) {
-        dbms = 'hsql'
-        host = 'localhost:9010'
-        dbName = 'refapp'
-        dbUser = 'sa'
-        dbPassword = ''
+        dbms = 'postgres'
+        host = 'localhost'
+        dbName = 'refapp_6'
+        dbUser = 'root'
+        dbPassword = 'root'
     }
 }
 
@@ -224,6 +228,7 @@ configure(portalModule) {
         testCompile('com.jayway.jsonpath:json-path:2.4.0')
         testCompile("httpunit:httpunit:1.7")
         testCompile('org.apache.httpcomponents:httpmime:4.5.6')
+        testCompile("rhino:js:1.7R2")
     }
 
     def webappName = "${modulePrefix}-portal"

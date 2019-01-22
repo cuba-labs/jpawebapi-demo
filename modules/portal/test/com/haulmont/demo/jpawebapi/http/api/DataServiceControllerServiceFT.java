@@ -8,7 +8,6 @@
 //import com.haulmont.bali.util.Dom4j;
 //import com.haulmont.cuba.core.sys.persistence.PostgresUUID;
 //import com.haulmont.cuba.restapi.XMLConverter;
-//import com.haulmont.demo.jpawebapi.core.app.PortalTestService;
 //import com.meterware.httpunit.*;
 //import org.apache.commons.io.IOUtils;
 //import org.dom4j.Document;
@@ -33,7 +32,6 @@
 //import java.sql.SQLException;
 //import java.util.*;
 //
-//import static com.haulmont.demo.jpawebapi.http.api.RestXmlUtils.*;
 //import static org.hamcrest.CoreMatchers.containsString;
 //import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.assertNotNull;
@@ -515,7 +513,7 @@
 //
 //    private WebResponse invokeServiceMethodGet(String type, String methodName, String... params) throws IOException, SAXException {
 //        String serviceName = PortalTestService.NAME;
-//        StringBuilder sb = new StringBuilder();
+//        StringBuilder sb = ew StringBuilder();
 //        sb.append("refapp-portal/api/service.").append(type);
 //        sb.append("?s=").append(sessionId)
 //                .append("&service=").append(serviceName)

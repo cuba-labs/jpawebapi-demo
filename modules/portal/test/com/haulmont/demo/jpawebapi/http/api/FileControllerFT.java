@@ -80,14 +80,14 @@ public class FileControllerFT {
         ByteArrayInputStream is = new ByteArrayInputStream(content.getBytes());
 
         WebResponse response = conv.sendRequest(new PostMethodWebRequest(
-                URI_BASE + "/refapp-portal/api/upload?" + "s=" + sessionId + "&name=test.txt&ext=txt&size=" + content.length(),
+                URI_BASE + "refapp-portal/api/upload?" + "s=" + sessionId + "&name=test.txt&ext=txt&size=" + content.length(),
                 is,
                 "application/octet-stream"));
 
         String fileDescrId = response.getText();
 
         response = conv.sendRequest(new GetMethodWebRequest(
-                URI_BASE + "/refapp-portal/api/download?" + "s=" + sessionId + "&f=" + fileDescrId));
+                URI_BASE + "refapp-portal/api/download?" + "s=" + sessionId + "&f=" + fileDescrId));
 
         String text = response.getText();
 
