@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <views xmlns="http://schemas.haulmont.com/cuba/view.xsd">
-    <view class="com.haulmont.cuba.security.entity.Group" name="group-edit-test"
-          systemProperties="true" extends="_local">
-        <property name="parent"/>
-    </view>
 
 </views>

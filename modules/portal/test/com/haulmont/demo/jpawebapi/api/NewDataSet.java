@@ -1,4 +1,4 @@
-package com.haulmont.demo.jpawebapi.http.api;
+package com.haulmont.demo.jpawebapi.api;
 
 import com.haulmont.cuba.core.sys.persistence.PostgresUUID;
 
@@ -26,7 +26,7 @@ public class NewDataSet {
     }
 
     public void cleanup(Connection conn) throws SQLException {
-        deleteInstances(conn, "REFAPP_TEST_ENTITY", idPool);
+        deleteInstances(conn, "JPADEMO_TEST_ENTITY", idPool);
     }
 
     private void deleteInstances(Connection conn, String tableName, Set<UUID> ids) throws SQLException {

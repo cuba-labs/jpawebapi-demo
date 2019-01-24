@@ -6,8 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Table(name = "REFAPP_TEST_ENTITY")
-@Entity(name = "refapp_TestEntity")
+@Table(name = "JPADEMO_TEST_ENTITY")
+@Entity(name = "jpademo_TestEntity")
 public class TestEntity extends StandardEntity {
     @Column(name = "F_NAME")
     protected String fName;

@@ -45,7 +45,7 @@ public class PortalTestServiceBean implements PortalTestService {
         Transaction tx = persistence.createTransaction();
         try {
             EntityManager em = persistence.getEntityManager();
-            result = em.createQuery("select c from REFAPP_TEST_ENTITY c", TestEntity.class).getResultList();
+            result = em.createQuery("select c from JPADEMO_TEST_ENTITY c", TestEntity.class).getResultList();
             tx.commit();
         } finally {
             tx.end();

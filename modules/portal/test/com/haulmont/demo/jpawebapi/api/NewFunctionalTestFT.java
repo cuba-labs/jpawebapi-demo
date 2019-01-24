@@ -1,4 +1,4 @@
-package com.haulmont.demo.jpawebapi.http.api;
+package com.haulmont.demo.jpawebapi.api;
 
 import com.haulmont.cuba.core.sys.persistence.PostgresUUID;
 import com.haulmont.demo.jpawebapi.core.app.PortalTestService;
@@ -24,14 +24,13 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class NewFunctionalTestFT {
 
-    private static final String DB_URL = "jdbc:postgresql://localhost/refapp_6";
+    private static final String DB_URL = "jdbc:postgresql:localhost/refapp_6";
     private static final String URI_BASE = "http://localhost:8080/";
-    private static final String apiPath = "refapp-portal";
+    private static final String apiPath = "app-portal/jpawebapi";
 
     private static final String userLogin = "admin";
     private static final String userPassword = "admin";
@@ -61,7 +60,7 @@ public class NewFunctionalTestFT {
 
     @After
     public void tearDown() throws Exception {
-//        logout();
+        logout();
 //        dirtyData.cleanup(conn);
 
         if (conn != null) {
@@ -71,37 +70,37 @@ public class NewFunctionalTestFT {
 
     public void prepareDb() throws SQLException {
 
-        executePrepared("truncate REFAPP_TEST_ENTITY");
+        executePrepared("truncate JPADEMO_TEST_ENTITY");
 
-        executePrepared("insert into REFAPP_TEST_ENTITY(id) values (?)",
+        executePrepared("insert into JPADEMO_TEST_ENTITY(id) values (?)",
                 new PostgresUUID(UUID.fromString("b3a5b887-d595-466c-98e1-40629acc2c3e"))
         );
 
     }
 
-//    @Test
-//    public void find_JSON() throws Exception {
-//        String testEnttyIdString = "b3a5b887-d595-466c-98e1-40629acc2c3e";
-//        WebResponse response = GET(apiPath + "/api/find.json?e=refapp_TestEntity-" + testEnttyIdString + "&s=" + sessionId,
-//                "charset=UTF-8");
-//        JSONObject entity = new JSONObject(response.getText());
-//        assertEquals("refapp_TestEntity-" + testEnttyIdString, entity.getString("id"));
-//    }
+    @Test
+    public void find_JSON() throws Exception {
+        String testEnttyIdString = "b3a5b887-d595-466c-98e1-40629acc2c3e";
+        WebResponse response = GET(apiPath + "/api/find.json?e=jpademo_TestEntity-" + testEnttyIdString + "&s=" + sessionId,
+                "charset=UTF-8");
+        JSONObject entity = new JSONObject(response.getText());
+        assertEquals("jpademo_TestEntity-" + testEnttyIdString, entity.getString("id"));
+    }
 
-//    @Test
-//    public void commit_insertInstance_autogenerateUUID_JSON() throws Exception {
-//        String json = prepareFile("new_test_entity.json", MapUtils.asMap(
-//                "$ENTITY-TO_BE_REPLACED_ID$", "NEW-refapp_TestEntity")
-//        );
-//        WebResponse response = POST("refapp-portal/api/commit?" + "s=" + sessionId, json,
-//                "application/json;charset=UTF-8");
-//        JSONArray res = new JSONArray(response.getText());
-//        String id = res.getJSONObject(0).getString("id");
-//        assertTrue(id.startsWith("refapp_TestEntity-"));
-//
-//        //delete created car
-//        deleteCar(id.substring("refapp_TestEntity-".length()));
-//    }
+    @Test
+    public void commit_insertInstance_autogenerateUUID_JSON() throws Exception {
+        String json = prepareFile("new_test_entity.json", MapUtils.asMap(
+                "$ENTITY-TO_BE_REPLACED_ID$", "NEW-jpademo_TestEntity")
+        );
+        WebResponse response = POST(apiPath + "/api/commit?" + "s=" + sessionId, json,
+                "application/json;charset=UTF-8");
+        JSONArray res = new JSONArray(response.getText());
+        String id = res.getJSONObject(0).getString("id");
+        assertTrue(id.startsWith("jpademo_TestEntity-"));
+
+//        delete created car
+        deleteCar(id.substring("jpademo_TestEntity-".length()));
+    }
 
 
     @Test
@@ -113,11 +112,11 @@ public class NewFunctionalTestFT {
         assertNotNull(resultArray);
         System.out.println("Service result : " + response.getText());
         System.out.println("Service size : " + resultArray.length());
-//        assertEquals(2, resultArray.length());
+        assertEquals(2, resultArray.length());
 
-//        JSONObject carObject = resultArray.getJSONObject(0);
+        JSONObject carObject = resultArray.getJSONObject(0);
 
-//        String colourId = carObject.getJSONObject("colour").getString("id");
+        String colourId = carObject.getJSONObject("colour").getString("id");
 //        assertEquals("ref$Colour-" + colourUuidString, colourId);
     }
 
@@ -127,7 +126,7 @@ public class NewFunctionalTestFT {
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("refapp-portal/api/login",
+        WebResponse response = POST(apiPath + "/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }
@@ -136,7 +135,7 @@ public class NewFunctionalTestFT {
         if (sessionId == null)
             return;
         try {
-            GET("refapp-portal/api/logout?session=" + sessionId, "charset=UTF-8");
+            GET(apiPath + "/api/logout?session=" + sessionId, "charset=UTF-8");
         } catch (Exception e) {
             System.out.println("Error on logout: " + e);
         }
@@ -155,7 +154,7 @@ public class NewFunctionalTestFT {
 
 
     private void deleteCar(String id) throws SQLException {
-        executePrepared("delete from REFAPP_TEST_ENTITY where id = ?",
+        executePrepared("delete from JPADEMO_TEST_ENTITY where id = ?",
                 new PostgresUUID(UUID.fromString(id)));
     }
 
@@ -181,7 +180,8 @@ public class NewFunctionalTestFT {
     private WebResponse invokeServiceMethodGet(String type, String methodName, String... params) throws IOException, SAXException {
         String serviceName = PortalTestService.NAME;
         StringBuilder sb = new StringBuilder();
-        sb.append("refapp-portal/api/service.").append(type);
+        sb.append(apiPath);
+        sb.append("/api/service.").append(type);
         sb.append("?s=").append(sessionId)
                 .append("&service=").append(serviceName)
                 .append("&method=").append(methodName);

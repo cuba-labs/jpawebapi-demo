@@ -1,5 +1,5 @@
-rootProject.name = 'JpaWebApiDemo'
-def modulePrefix = 'refapp'
+rootProject.name = 'jpawebapi_demo'
+def modulePrefix = 'app'
 include(":${modulePrefix}-global", ":${modulePrefix}-core", ":${modulePrefix}-web", ":${modulePrefix}-portal")
 project(":${modulePrefix}-global").projectDir = new File(settingsDir, 'modules/global')
 project(":${modulePrefix}-core").projectDir = new File(settingsDir, 'modules/core')

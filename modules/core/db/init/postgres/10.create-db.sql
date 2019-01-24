@@ -1,4 +1,4 @@
-create table REFAPP_TEST_ENTITY (
+create table JPADEMO_TEST_ENTITY (
     ID uuid not null,
     CREATE_TS timestamp,
     CREATED_BY varchar(50),

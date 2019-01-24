@@ -9,10 +9,12 @@
         <beans:property name="targetUrlParameter" value="/login"/>
     </beans:bean>
 
+
     <!-- REST-API has separate spring-security configuration -->
     <http pattern="/rest/**" security="none"/>
     <http pattern="/api/**" security="none"/>
     <http pattern="/resources/**" security="none"/>
+
 
     <http auto-config="true"
           use-expressions="true"
@@ -41,4 +43,7 @@
     <authentication-manager alias="portalAuthenticationManager">
         <authentication-provider ref="portal_AuthProvider"/>
     </authentication-manager>
+
+
+
 </beans:beans>

@@ -8,7 +8,7 @@
       maxIdle="2"
       maxWaitMillis="5000"
       driverClassName="org.postgresql.Driver"
-      url="jdbc:postgresql://localhost/refapp_6"
+      url="jdbc:postgresql://localhost/jpademo"
       username="root"
       password="root"/>
 
@@ -21,7 +21,7 @@
           name="jdbc/CubaDS"
           password=""
           type="javax.sql.DataSource"
-          url="jdbc:hsqldb:hsql://localhost:9010/refapp"
+          url="jdbc:hsqldb:hsql://localhost:9010/jpademo"
           username="sa"/>-->
 
 </Context>

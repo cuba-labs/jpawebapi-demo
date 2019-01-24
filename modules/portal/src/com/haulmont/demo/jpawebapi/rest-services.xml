@@ -9,7 +9,7 @@
         <method name="loadCache"/>
     </service>
 
-    <service name="refapp_PortalTestService">
+    <service name="demo_PortalTestService">
         <method name="emptyMethod"/>
         <method name="finAllEntities"/>
         <method name="findEntityById"/>

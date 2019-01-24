@@ -27,81 +27,18 @@ buildscript {
 
 apply(plugin: 'cuba')
 
-def coreModule = project(':refapp-core')
-def webModule = project(':refapp-web')
-def portalModule = project(':refapp-portal')
+def modulePrefix = 'app'
+
+def coreModule = project(":${modulePrefix}-core")
+def webModule = project(":${modulePrefix}-web")
+def portalModule = project(":${modulePrefix}-portal")
 
 def coreJarNames = ['cuba-global', 'cuba-core',
-                    'refapp-global', 'refapp-core']
+                    'app-global', 'app-core']
 
 configure(coreModule) {
-    task testDataModel(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/core/RefAppPostgresTest.class")
-        systemProperties = System.getProperties()
-    }
 
-    task testDatabase(type: Test, dependsOn: testClasses) {
-        include("**/*PostgresTest.class")
-        exclude("com/haulmont/refapp/core/RefAppPostgresTest.class")
-        systemProperties = System.getProperties()
-        testLogging {
-            events 'passed'
-        }
-    }
-
-    task testDataModelHsql(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/db_hsql/DataModelHsqlTestClass.class")
-        systemProperties = System.getProperties()
-    }
-
-    task testDatabaseHsql(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/db_hsql/HsqlTestSuite.class")
-        systemProperties = System.getProperties()
-        testLogging {
-            events 'passed'
-        }
-    }
-
-    task testDataModelMssql(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/db_mssql/DataModelMssqlTestClass.class")
-        systemProperties = System.getProperties()
-    }
-
-    task testDatabaseMssql(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/db_mssql/MssqlTestSuite.class")
-        systemProperties = System.getProperties()
-        testLogging {
-            events 'passed'
-        }
-    }
-
-    task testDataModelOracle(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/db_oracle/DataModelOracleTestClass.class")
-        systemProperties = System.getProperties()
-    }
-
-    task testDatabaseOracle(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/db_oracle/OracleTestSuite.class")
-        systemProperties = System.getProperties()
-        testLogging {
-            events 'passed'
-        }
-    }
-
-    task testDataModelMysql(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/db_mysql/DataModelMysqlTestClass.class")
-        systemProperties = System.getProperties()
-    }
-
-    task testDatabaseMysql(type: Test, dependsOn: testClasses) {
-        include("com/haulmont/refapp/db_mysql/MysqlTestSuite.class")
-        systemProperties = System.getProperties()
-        testLogging {
-            events 'passed'
-        }
-    }
-
-    assembleDbScripts { moduleAlias = '30-refapp' }
+    assembleDbScripts { moduleAlias = '30-app' }
 
     task createTestDb(dependsOn: assembleDbScripts, description: 'Creates local Postgres database for tests', type: CubaDbCreation) {
         dbms = 'postgres'
@@ -124,63 +61,9 @@ configure(coreModule) {
         dbPassword = 'root'
     }
 
-    task createMssqlDb(dependsOn: assembleDbScripts, description: 'Creates MS SQL database', type: CubaDbCreation) {
-        dbms = 'mssql'
-        host = System.getProperty('mssqlHost') ? System.getProperty('mssqlHost') : 'localhost'
-        dbName = System.getProperty('mssqlDbName') ? System.getProperty('mssqlDbName') : 'refapp_6'
-        dbUser = System.getProperty('mssqlDbUser') ? System.getProperty('mssqlDbUser') : 'sa'
-        dbPassword = System.getProperty('mssqlDbPassword') ? System.getProperty('mssqlDbPassword') : 'saPass1'
-    }
-
-    task updateMssqlDb(dependsOn: assembleDbScripts, description: 'Updates MS SQL database', type: CubaDbUpdate) {
-        dbms = 'mssql'
-        host = System.getProperty('mssqlHost') ? System.getProperty('mssqlHost') : 'localhost'
-        dbName = System.getProperty('mssqlDbName') ? System.getProperty('mssqlDbName') : 'refapp_6'
-        dbUser = System.getProperty('mssqlDbUser') ? System.getProperty('mssqlDbUser') : 'sa'
-        dbPassword = System.getProperty('mssqlDbPassword') ? System.getProperty('mssqlDbPassword') : 'saPass1'
-    }
-
-    task createOracleDb(dependsOn: assembleDbScripts, description: 'Creates Oracle database', type: CubaDbCreation) {
-        dbms = 'oracle'
-        host = System.getProperty('oracleHost') ? System.getProperty('oracleHost') : 'localhost'
-        dbName = System.getProperty('oracleDbName') ? System.getProperty('oracleDbName') : 'orcl'
-        dbUser = 'refapp_6'
-        dbPassword = 'refapp'
-        oracleSystemPassword = System.getProperty('oracleSystemPassword') ?
-                System.getProperty('oracleSystemPassword') : 'oracle'
-        driverClasspath = System.getProperty('oracleDriverClasspath') ?
-                System.getProperty('oracleDriverClasspath') : "$cuba.tomcat.dir/lib/ojdbc6.jar"
-    }
-
-    task updateOracleDb(dependsOn: assembleDbScripts, description: 'Updates Oracle database', type: CubaDbUpdate) {
-        dbms = 'oracle'
-        host = System.getProperty('oracleHost') ? System.getProperty('oracleHost') : 'localhost'
-        dbName = System.getProperty('oracleDbName') ? System.getProperty('oracleDbName') : 'orcl'
-        dbUser = 'refapp_6'
-        dbPassword = 'refapp'
-        driverClasspath = System.getProperty('oracleDriverClasspath') ?
-                System.getProperty('oracleDriverClasspath') : "$cuba.tomcat.dir/lib/ojdbc6.jar"
-    }
-
-    task createMysqlDb(dependsOn: assembleDbScripts, description: 'Creates MySQL database', type: CubaDbCreation) {
-        dbms = 'mysql'
-        host = System.getProperty('mysqlHost') ? System.getProperty('mysqlHost') : 'localhost'
-        dbName = System.getProperty('mysqlDbName') ? System.getProperty('mysqlDbName') : 'refapp_6'
-        dbUser = System.getProperty('mysqlDbUser') ? System.getProperty('mysqlDbUser') : 'root'
-        dbPassword = System.getProperty('mysqlDbPassword') ? System.getProperty('mysqlDbPassword') : 'root'
-    }
-
-    task updateMysqlDb(dependsOn: assembleDbScripts, description: 'Updates MySQL database', type: CubaDbUpdate) {
-        dbms = 'mysql'
-        host = System.getProperty('mysqlHost') ? System.getProperty('mysqlHost') : 'localhost'
-        dbName = System.getProperty('mysqlDbName') ? System.getProperty('mysqlDbName') : 'refapp_6'
-        dbUser = System.getProperty('mysqlDbUser') ? System.getProperty('mysqlDbUser') : 'root'
-        dbPassword = System.getProperty('mysqlDbPassword') ? System.getProperty('mysqlDbPassword') : 'root'
-    }
-
     // HSQLDB stuff
 
-    def hsqlDbName = 'cubadb'
+    def hsqlDbName = 'jpademo'
 
     task startHsqlDb(description: 'Starts local HSQLDB server', type: CubaHsqlStart) {
         dbName = hsqlDbName
@@ -214,79 +97,24 @@ configure(coreModule) {
 
     // Sample data
 
-    task createSampleData(type: CubaDbScript) {
-        dbms = 'postgres'
-        dbName = 'refapp_6'
-        dbUser = 'root'
-        dbPassword = 'root'
-
-        script 'db/init/postgres/create-sample-data.sql'
-    }
+//    task createSampleData(type: CubaDbScript) {
+//        dbms = 'postgres'
+//        dbName = 'refapp_6'
+//        dbUser = 'root'
+//        dbPassword = 'root'
+//
+//        script 'db/init/postgres/create-sample-data.sql'
+//    }
 }
 
-configure(webModule) {
-    test {
-        exclude '**/*UiTest.class'
-    }
-
-    task testUi(type: Test, dependsOn: testClasses) {
-        include('**/*UiTest.class')
-
-        if (System.getProperty('cuba.testui.remoteDriver')) {
-            systemProperty 'cuba.testui.remoteDriver', System.getProperty('cuba.testui.remoteDriver')
-        }
-        if (System.getProperty('selenide.baseUrl')) {
-            systemProperty 'selenide.baseUrl', System.getProperty('selenide.baseUrl')
-        }
-        if (System.getProperty('cuba.testui.browser')) {
-            systemProperty 'cuba.testui.browser', System.getProperty('cuba.testui.browser')
-        }
-        if (System.getProperty('browser')) {
-            systemProperty 'browser', System.getProperty('browser')
-        }
-
-        if (System.getProperty('selenide.reports')) {
-            systemProperty 'selenide.reports', System.getProperty('selenide.reports')
-        }
-        if (System.getProperty('selenide.reportsUrl')) {
-            systemProperty 'selenide.reportsUrl', System.getProperty('selenide.reportsUrl')
-        }
-        if (System.getProperty('selenide.timeout')) {
-            systemProperty 'selenide.timeout', System.getProperty('selenide.timeout')
-        }
-        if (System.getProperty('selenide.browser')) {
-            systemProperty 'selenide.browser', System.getProperty('selenide.browser')
-        }
-        if (System.getProperty('webdriver.gecko.driver')) {
-            systemProperty 'webdriver.gecko.driver', System.getProperty('webdriver.gecko.driver')
-        }
-
-        if (System.getProperty('cuba.testui.appLog')) {
-            systemProperty 'cuba.testui.appLog', System.getProperty('cuba.testui.appLog')
-        }
-        systemProperty 'selenide.savePageSource', 'false'
-    }
-
-    task zipUiTestResults(type: Zip) {
-        from file("$buildDir/reports")
-        destinationDir file("$buildDir")
-        archiveName "ui-test-reports.zip"
-    }
-
-    task checkLog() {
-        doLast {
-            String fileName = System.getProperty("cuba.testui.appLog", "$cuba.tomcat.dir/logs/app.log")
-            File file = new File(fileName)
-            file.readLines().each {
-                if (it.contains("ERROR")) {
-                    throw new GradleException("Log file contains ERROR: " + it)
-                }
-            }
-        }
-    }
-
-
-}
+//configure(webModule) {
+//    test {
+//        exclude '**/*UiTest.class'
+//    }
+//    
+//
+//
+//}
 
 configure(portalModule) {
     test {
@@ -316,40 +144,6 @@ task stopTomcatAfterTest(type: CubaStopTomcat, description: 'Stops Tomcat after 
     tomcatRootDir = cuba.tomcat.dir
 }
 
-task enableRemoteJmx() {
-    doLast {
-        project.file("${cuba.tomcat.dir}/bin/setenv.bat").text = '''
-set CATALINA_OPTS=-Xmx512m -Dfile.encoding=UTF-8
-
-set CATALINA_OPTS=%CATALINA_OPTS% -Dlogback.configurationFile=../conf/logback.xml
-
-set CATALINA_OPTS=%CATALINA_OPTS% -Dcom.sun.management.jmxremote 
-set CATALINA_OPTS=%CATALINA_OPTS% -Djava.rmi.server.hostname=localhost 
-set CATALINA_OPTS=%CATALINA_OPTS% -Dcom.sun.management.jmxremote.port=7777 
-set CATALINA_OPTS=%CATALINA_OPTS% -Dcom.sun.management.jmxremote.ssl=false 
-set CATALINA_OPTS=%CATALINA_OPTS% -Dcom.sun.management.jmxremote.authenticate=false
-
-set JPDA_OPTS=-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n
-'''
-
-        project.file("${cuba.tomcat.dir}/bin/setenv.sh").text = '''
-CATALINA_OPTS="-Xmx512m -Dfile.encoding=UTF-8"
-
-CATALINA_OPTS="$CATALINA_OPTS -Dlogback.configurationFile=../conf/logback.xml"
-
-CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote"
-
-CATALINA_OPTS="$CATALINA_OPTS \\
--Djava.rmi.server.hostname=localhost \\
--Dcom.sun.management.jmxremote.port=7777 \\
--Dcom.sun.management.jmxremote.ssl=false \\
--Dcom.sun.management.jmxremote.authenticate=false"
-
-JPDA_OPTS="-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
-'''
-    }
-}
-
 task enableTestProperties() {
     doLast {
         project.file("${cuba.tomcat.dir}/conf/app-core/").mkdirs()
@@ -369,14 +163,14 @@ cuba.rest.ldap.userLoginField = cn
 }
 
 task prepareTest(dependsOn: [dropTomcat, coreModule.assemble, webModule.assemble, portalModule.assemble],
-                 description: 'Prepare server for tests') {
+        description: 'Prepare server for tests') {
     doLast {
         // Setup
         setupTomcat.execute()
 
         // Test configuration
         enableTestProperties.execute()
-        enableRemoteJmx.execute()
+//        enableRemoteJmx.execute()
 
         // Deploy
         coreModule.deploy.execute()
@@ -446,7 +240,7 @@ configure(webModule) {
     task deploy1(dependsOn: assemble, type: CubaDeployment) {
         tomcatRootDir = tomcat1Dir
         appName = 'app'
-        jarNames = ['refapp-global', 'refapp-web']
+        jarNames = ['app-global', 'app-web']
     }
 }
 
@@ -565,7 +359,7 @@ task buildWar(type: CubaWarBuilding) {
 
 task buildSingleWar(type: CubaWarBuilding) {
     appHome = '${catalina.base}/work/app_home'
-    webXml = "${project(':refapp-web').projectDir}/web/WEB-INF/single-app-web.xml"
+    webXml = "${project(':app-web').projectDir}/web/WEB-INF/single-app-web.xml"
     coreContextXmlPath = 'modules/core/web/META-INF/single-war-context.xml'
     includeJdbcDriver = true
     includeContextXml = true

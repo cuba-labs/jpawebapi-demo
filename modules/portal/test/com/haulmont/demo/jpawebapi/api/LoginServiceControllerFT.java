@@ -1,9 +1,7 @@
-/*
+package com.haulmont.demo.jpawebapi.api;/*
  * Copyright (c) 2008-2016 Haulmont. All rights reserved.
- * Use is subject to license terms, see http://www.cuba-platform.com/commercial-software-license for details.
+ * Use is subject to license terms, see http:www.cuba-platform.com/commercial-software-license for details.
  */
-
-package com.haulmont.demo.jpawebapi.http.api;
 
 import com.meterware.httpunit.*;
 import org.json.JSONObject;
@@ -46,7 +44,7 @@ public class LoginServiceControllerFT {
         loginJSON.put("password", "admin");
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("refapp-portal/api/login",
+        WebResponse response = POST("app-portal/jpawebapi/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         String sessionId = response.getText();
         assertNotNull(sessionId);
@@ -64,7 +62,7 @@ public class LoginServiceControllerFT {
             content += URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.name()) + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.name()) +"&";
         }
 
-        WebResponse response = POST("/refapp-portal/api/login",
+        WebResponse response = POST("/app-portal/jpawebapi/api/login",
                 content, "application/x-www-form-urlencoded;charset=UTF-8");
         String sessionId = response.getText();
         assertNotNull(sessionId);
@@ -73,7 +71,7 @@ public class LoginServiceControllerFT {
     @Test
     public void login_GET() throws Exception {
         String content = "?u=admin&p=" + "admin" + "&l=ru";
-        WebResponse response = GET("refapp-portal/api/login" + content);
+        WebResponse response = GET("app-portal/jpawebapi/api/login" + content);
         String sessionId = response.getText();
         assertNotNull(sessionId);
     }

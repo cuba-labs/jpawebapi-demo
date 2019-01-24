@@ -1,9 +1,7 @@
-/*
+package com.haulmont.demo.jpawebapi.api;/*
  * Copyright (c) 2008-2016 Haulmont. All rights reserved.
- * Use is subject to license terms, see http://www.cuba-platform.com/commercial-software-license for details.
+ * Use is subject to license terms, see http:www.cuba-platform.com/commercial-software-license for details.
  */
-
-package com.haulmont.demo.jpawebapi.http.api;
 
 import com.meterware.httpunit.*;
 import org.json.JSONException;
@@ -48,7 +46,7 @@ public class FileControllerFT {
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("refapp-portal/api/login",
+        WebResponse response = POST("app-portal/jpawebapi/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }
@@ -57,7 +55,7 @@ public class FileControllerFT {
         if (sessionId == null)
             return;
         try {
-            GET("refapp-portal/api/logout?session=" + sessionId, "charset=UTF-8");
+            GET("app-portal/jpawebapi/api/logout?session=" + sessionId, "charset=UTF-8");
         } catch (Exception e) {
             System.out.println("Error on logout: " + e);
         }
@@ -80,21 +78,21 @@ public class FileControllerFT {
         ByteArrayInputStream is = new ByteArrayInputStream(content.getBytes());
 
         WebResponse response = conv.sendRequest(new PostMethodWebRequest(
-                URI_BASE + "refapp-portal/api/upload?" + "s=" + sessionId + "&name=test.txt&ext=txt&size=" + content.length(),
+                URI_BASE + "app-portal/jpawebapi/api/upload?" + "s=" + sessionId + "&name=test.txt&ext=txt&size=" + content.length(),
                 is,
                 "application/octet-stream"));
 
         String fileDescrId = response.getText();
 
         response = conv.sendRequest(new GetMethodWebRequest(
-                URI_BASE + "refapp-portal/api/download?" + "s=" + sessionId + "&f=" + fileDescrId));
+                URI_BASE + "app-portal/jpawebapi/api/download?" + "s=" + sessionId + "&f=" + fileDescrId));
 
         String text = response.getText();
 
         assertEquals(content, text);
 
-        // check FileDescriptor
-        response = GET("refapp-portal/api/find.json?e=sys$FileDescriptor-" + fileDescrId + "&s=" + sessionId,
+//        check FileDescriptor
+        response = GET("app-portal/jpawebapi/api/find.json?e=sys$FileDescriptor-" + fileDescrId + "&s=" + sessionId,
                 "charset=UTF-8");
         JSONObject fd = new JSONObject(response.getText());
         assertEquals(content.length(), fd.getLong("size"));
