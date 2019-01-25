@@ -2,9 +2,7 @@ package com.haulmont.demo.jpawebapi.core.entity;
 
 import com.haulmont.cuba.core.entity.StandardEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Table(name = "JPADEMO_TEST_ENTITY")
 @Entity(name = "jpademo_TestEntity")
@@ -17,6 +15,18 @@ public class TestEntity extends StandardEntity {
 
     @Column(name = "AGE")
     protected Integer age;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "")
+    @JoinColumn(name = "INNER_ENTITY_ID")
+    protected TestInnerEntity innerEntity;
+
+    public TestInnerEntity getInnerEntity() {
+        return innerEntity;
+    }
+
+    public void setInnerEntity(TestInnerEntity innerEntity) {
+        this.innerEntity = innerEntity;
+    }
 
     public Integer getAge() {
         return age;

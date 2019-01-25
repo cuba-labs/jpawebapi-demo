@@ -13,6 +13,7 @@
         <method name="emptyMethod"/>
         <method name="finAllEntities"/>
         <method name="findEntityById"/>
-
+        <method name="updateFirstName"/>
+        <method name="updateFirstNames"/>
     </service>
 </services>

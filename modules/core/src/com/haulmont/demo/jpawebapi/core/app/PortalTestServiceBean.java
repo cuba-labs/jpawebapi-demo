@@ -7,11 +7,13 @@ package com.haulmont.demo.jpawebapi.core.app;
 
 import com.haulmont.cuba.core.EntityManager;
 import com.haulmont.cuba.core.Persistence;
+import com.haulmont.cuba.core.Query;
 import com.haulmont.cuba.core.Transaction;
 import com.haulmont.demo.jpawebapi.core.entity.TestEntity;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +47,7 @@ public class PortalTestServiceBean implements PortalTestService {
         Transaction tx = persistence.createTransaction();
         try {
             EntityManager em = persistence.getEntityManager();
-            result = em.createQuery("select c from JPADEMO_TEST_ENTITY c", TestEntity.class).getResultList();
+            result = em.createQuery("select c from jpademo_TestEntity c", TestEntity.class).getResultList();
             tx.commit();
         } finally {
             tx.end();
@@ -53,5 +55,47 @@ public class PortalTestServiceBean implements PortalTestService {
         return result;
     }
 
+    @Override
+    public TestEntity updateFirstName(UUID id, String newFirstName) {
+        TestEntity result;
+        Transaction tx = persistence.createTransaction();
+        try {
+            EntityManager entityManager = persistence.getEntityManager();
+            Query query = entityManager.createQuery("update jpademo_TestEntity c set c.fName = :newName where c.id = :id");
+            query.setParameter("newName", newFirstName);
+            query.setParameter("id", id);
+            query.executeUpdate();
+
+            result = entityManager.find(TestEntity.class, id);
+            tx.commit();
+        } finally {
+            tx.end();
+        }
+        return result;
+    }
+
+    @Override
+    public List<TestEntity> updateFirstNames(List<TestEntity> entities, String newFirstName) {
+        List<TestEntity> result = new ArrayList<>();
+        Transaction tx = persistence.createTransaction();
+        try {
+            EntityManager entityManager = persistence.getEntityManager();
+            String statement = "update jpademo_TestEntity c set c.fName = :newName where c.id in(:id1,:id2)";
+            Query query1 = entityManager.createQuery(statement);
+            query1.setParameter("newName", newFirstName);
+            UUID id_1 = entities.get(0).getId();
+            UUID id_2 = entities.get(1).getId();
+            query1.setParameter("id1", id_1);
+            query1.setParameter("id2", id_2);
+            query1.executeUpdate();
+            result.add(entityManager.find(TestEntity.class, id_1));
+            result.add(entityManager.find(TestEntity.class, id_2));
+
+            tx.commit();
+        } finally {
+            tx.end();
+        }
+        return result;
+    }
 
 }

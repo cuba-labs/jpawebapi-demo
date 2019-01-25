@@ -23,4 +23,8 @@ public interface PortalTestService {
 
     List<TestEntity> finAllEntities();
 
+    TestEntity updateFirstName(UUID id, String newFirstName);
+
+    List<TestEntity> updateFirstNames(List<TestEntity> entities, String newFirstName);
+
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-             xmlns:beans="http://www.springframework.org/schema/beans">
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:http="http://www.springframework.org/schema/security">
 
     <beans:bean name="portal_AuthProvider" class="com.haulmont.cuba.portal.security.PortalAuthenticationProvider"/>
 
@@ -9,8 +10,7 @@
         <beans:property name="targetUrlParameter" value="/login"/>
     </beans:bean>
 
-
-    <!-- REST-API has separate spring-security configuration -->
+    <!--REST-API has separate spring-security configuration-->
     <http pattern="/rest/**" security="none"/>
     <http pattern="/api/**" security="none"/>
     <http pattern="/resources/**" security="none"/>
@@ -43,7 +43,6 @@
     <authentication-manager alias="portalAuthenticationManager">
         <authentication-provider ref="portal_AuthProvider"/>
     </authentication-manager>
-
 
 
 </beans:beans>
