@@ -6,6 +6,7 @@ import com.haulmont.cuba.core.sys.persistence.PostgresUUID;
 import com.haulmont.demo.jpawebapi.core.app.PortalTestService;
 import com.meterware.httpunit.*;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -168,11 +169,9 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_commit_new_instance_XML() throws Exception {
-        UUID newUuid = dirtyData.createEntityId();
         String xml = prepareFile("new_test_entity.xml", MapUtils.asMap(
-                "$ENTITY-TO_BE_REPLACED_ID$", "NEW-jpademo_TestEntity",
-                "$TO_BE_REPLACED_ID$", newUuid.toString())
-        );
+                "$ENTITY-TO_BE_REPLACED_ID$", "NEW-jpademo_TestEntity"
+        ));
 
         WebResponse response = POST(apiPath + "/api/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
@@ -183,6 +182,9 @@ public class DataServiceControllerFT {
         assertFieldValueEquals("Test_First_Name", instanceEl, "fName");
         assertFieldValueEquals("Test_Last_Name", instanceEl, "lName");
         assertFieldValueEquals("12", instanceEl, "age");
+
+        String elementId = instanceEl.attribute("id").getText();
+        UUID newUuid = UUID.fromString(StringUtils.substringAfter(elementId,"-"));
 
         response = GET(apiPath + "/api/find.xml?e=jpademo_TestEntity-" + newUuid + "&s=" + sessionId,
                 "charset=UTF-8");
