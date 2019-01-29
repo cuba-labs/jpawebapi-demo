@@ -7,7 +7,6 @@ import com.meterware.httpunit.*;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +18,10 @@ import org.xml.sax.SAXException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -204,9 +206,6 @@ public class DataServiceControllerFT {
         exception.expect(HttpNotFoundException.class);
         GET(apiPath + "/api/find.xml?e=jpademo_Driver-" + secondId + "&s=" + sessionId,
                 "charset=UTF-8");
-
-        int count = selectCount("JPADEMO_DRIVER", secondId);
-        assertEquals(1, count);
     }
 
     /********************************************************************************8
@@ -586,13 +585,5 @@ public class DataServiceControllerFT {
         Element fieldEl = (Element) instanceEl.selectSingleNode("field[@name='" + fieldName + "']");
         assertNotNull(fieldEl);
         assertEquals(value, fieldEl.getText());
-    }
-
-    private int selectCount(String table, String uuid) throws SQLException {
-        String sql = "select count(*) from " + table + "where id = ?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, uuid);
-        ResultSet rs = stmt.executeQuery();
-        return rs.getInt(0);
     }
 }
