@@ -49,7 +49,7 @@ dependencies {
     appComponent("com.haulmont.addon.jpawebapi:jpawebapi-global:0.1-SNAPSHOT")
 }
 
-def postgres = 'org.postgresql:postgresql:42.2.4'
+def hsql = 'org.hsqldb:hsqldb:2.2.9'
 
 configure([globalModule, coreModule, webModule, portalModule]) {
     apply(plugin: 'java')
@@ -88,8 +88,8 @@ configure(coreModule) {
     dependencies {
         compile(globalModule)
         compileOnly(servletApi)
-        jdbc(postgres)
-        testRuntime(postgres)
+        jdbc(hsql)
+        testRuntime(hsql)
     }
 
     task cleanConf(description: 'Cleans up conf directory') {
@@ -109,19 +109,19 @@ configure(coreModule) {
     }
 
     task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
-        dbms = 'postgres'
-        host = 'localhost'
+        dbms = 'hsql'
+        host = 'localhost:9010'
         dbName = 'jpademo'
-        dbUser = 'root'
-        dbPassword = 'root'
+        dbUser = 'sa'
+        dbPassword = ''
     }
 
     task updateDb(dependsOn: assembleDbScripts, description: 'Updates local database', type: CubaDbUpdate) {
-        dbms = 'postgres'
-        host = 'localhost'
+        dbms = 'hsql'
+        host = 'localhost:9010'
         dbName = 'jpademo'
-        dbUser = 'root'
-        dbPassword = 'root'
+        dbUser = 'sa'
+        dbPassword = ''
     }
 }
 
@@ -179,8 +179,9 @@ configure(portalModule) {
         compile(globalModule)
 
         testCompile("httpunit:httpunit:1.7")
-        testCompile('org.postgresql:postgresql:42.2.4')
+//        testCompile('org.postgresql:postgresql:42.2.4')
         testCompile("rhino:js:1.7R2")
+        testRuntime(hsql)
     }
 
     def webappName = "${modulePrefix}-portal"

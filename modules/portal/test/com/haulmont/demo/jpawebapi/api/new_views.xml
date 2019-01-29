@@ -6,7 +6,7 @@
   -->
 
 <views xmlns="http://www.haulmont.com/schema/cuba/view.xsd">
-    <view class="com.haulmont.demo.jpawebapi.core.entity.TestEntity" name="test.minimal">
-        <property name="innerEntity" view="_minimal"/>
+    <view class="com.haulmont.demo.jpawebapi.core.entity.Driver" name="test.minimal">
+        <property name="car" view="_minimal"/>
     </view>
 </views>

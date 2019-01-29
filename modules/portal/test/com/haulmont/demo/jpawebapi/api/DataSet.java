@@ -1,19 +1,16 @@
 package com.haulmont.demo.jpawebapi.api;
 
-import com.haulmont.cuba.core.sys.persistence.PostgresUUID;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class DataSet {
 
-    private Set<UUID> idPool = new HashSet<>();
-
+    private List<UUID> idPool = new ArrayList<>();
 
     public UUID createEntityId() {
         UUID result = UUID.randomUUID();
@@ -26,21 +23,25 @@ public class DataSet {
             idPool.add(uuid);
     }
 
-    public UUID getExistedEntity() {
-        return new ArrayList<UUID>(idPool).get(0);
+    public List<UUID> getIdPool() {
+        return idPool;
+    }
+
+    public void evictFromPool(UUID id) {
+        idPool.remove(id);
     }
 
     public void cleanup(Connection conn) throws SQLException {
-        deleteInstances(conn, "JPADEMO_TEST_ENTITY", idPool);
+        deleteInstances(conn, "JPADEMO_DRIVER", idPool);
     }
 
-    private void deleteInstances(Connection conn, String tableName, Set<UUID> ids) throws SQLException {
+    private void deleteInstances(Connection conn, String tableName, Collection<UUID> ids) throws SQLException {
         PreparedStatement stmt;
         stmt = conn.prepareStatement("delete from " + tableName + " where id = ?");
         try {
             for (UUID uuid : ids) {
-                Object param = new PostgresUUID(uuid);
-                stmt.setObject(1, param);
+                String param = uuid.toString();
+                stmt.setString(1, param);
                 stmt.executeUpdate();
             }
         } finally {

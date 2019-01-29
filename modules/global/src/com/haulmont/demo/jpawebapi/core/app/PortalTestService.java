@@ -5,7 +5,7 @@
 
 package com.haulmont.demo.jpawebapi.core.app;
 
-import com.haulmont.demo.jpawebapi.core.entity.TestEntity;
+import com.haulmont.demo.jpawebapi.core.entity.Driver;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,12 +19,12 @@ public interface PortalTestService {
 
     void emptyMethod();
 
-    TestEntity findEntityById(UUID id);
+    Driver findEntityById(UUID id);
 
-    List<TestEntity> finAllEntities();
+    List<Driver> finAllEntities();
 
-    TestEntity updateFirstName(UUID id, String newFirstName);
+    Driver updateFirstName(UUID id, String newFirstName);
 
-    List<TestEntity> updateFirstNames(List<TestEntity> entities, String newFirstName);
+    List<Driver> updateFirstNames(List<Driver> entities, String newFirstName);
 
 }
