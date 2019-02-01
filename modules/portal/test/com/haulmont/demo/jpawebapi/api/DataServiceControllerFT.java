@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DataServiceControllerFT {
 
-    private static final String DB_URL = "jdbc:hsqldb:hsql://localhost/jpademo";
+    private static final String DB_URL = "jdbc:hsqldb:hsql://localhost:9010/jpademo";
     private static final String DB_LOGIN = "sa";
     private static final String DB_PASSWORD = "";
 
@@ -292,7 +292,6 @@ public class DataServiceControllerFT {
 
         List<String> entitiesIdentifiersFromDB =
                 instanceList.stream().map(i -> i.attributeValue("id")).collect(Collectors.toList());
-        System.out.println(entitiesIdentifiersFromDB);
 
         for (UUID id : dataSet.getIdPool()) {
             assertTrue(entitiesIdentifiersFromDB.contains("jpademo_Driver-" + id.toString()));
