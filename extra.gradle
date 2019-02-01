@@ -67,6 +67,7 @@ configure(coreModule) {
 
     task startHsqlDb(description: 'Starts local HSQLDB server', type: CubaHsqlStart) {
         dbName = hsqlDbName
+        dbPort = 9010
     }
 
     task stopHsqlDb(description: 'Stops local HSQLDB server', type: CubaHsqlStop) {
@@ -74,7 +75,7 @@ configure(coreModule) {
     }
 
     task killHsqlDb(description: 'Kill local HSQLDB server process running on port 9001', type: CubaKillProcess) {
-        port = 9001
+        port = 9010
     }
 
     task removeHsqlDb(description: 'Removes local HSQL database', type: Delete) {
