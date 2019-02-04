@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DataServiceControllerFT {
 
-    private static final String DB_URL = "jdbc:hsqldb:hsql://localhost:9010/jpademo";
+    private static final String DB_URL = "jdbc:hsqldb:hsql://localhost:9001/jpademo";
     private static final String DB_LOGIN = "sa";
     private static final String DB_PASSWORD = "";
 

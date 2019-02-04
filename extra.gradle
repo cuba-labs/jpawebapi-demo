@@ -40,34 +40,11 @@ configure(coreModule) {
 
     assembleDbScripts { moduleAlias = '30-app' }
 
-    task createTestDb(dependsOn: assembleDbScripts, description: 'Creates local Postgres database for tests', type: CubaDbCreation) {
-        dbms = 'postgres'
-        dbName = 'refapp_test_6'
-        dbUser = 'root'
-        dbPassword = 'root'
-    }
-
-    task createDemoDb(dependsOn: assembleDbScripts, description: 'Creates local Postgres database for demo', type: CubaDbCreation) {
-        dbms = 'postgres'
-        dbName = ('refapp_demo' + (rootProject.hasProperty('demoToken') ? '_' + rootProject['demoToken'] : ''))
-        dbUser = 'root'
-        dbPassword = 'root'
-    }
-
-    task updateTestDb(dependsOn: assembleDbScripts, description: 'Updates local Postgres database for tests', type: CubaDbUpdate) {
-        dbms = 'postgres'
-        dbName = 'refapp_test_6'
-        dbUser = 'root'
-        dbPassword = 'root'
-    }
-
     // HSQLDB stuff
-
     def hsqlDbName = 'jpademo'
 
     task startHsqlDb(description: 'Starts local HSQLDB server', type: CubaHsqlStart) {
         dbName = hsqlDbName
-        dbPort = 9010
     }
 
     task stopHsqlDb(description: 'Stops local HSQLDB server', type: CubaHsqlStop) {
@@ -75,7 +52,7 @@ configure(coreModule) {
     }
 
     task killHsqlDb(description: 'Kill local HSQLDB server process running on port 9001', type: CubaKillProcess) {
-        port = 9010
+        port = 9001
     }
 
     task removeHsqlDb(description: 'Removes local HSQL database', type: Delete) {
