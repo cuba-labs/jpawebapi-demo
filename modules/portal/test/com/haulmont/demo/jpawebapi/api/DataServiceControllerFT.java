@@ -1,6 +1,22 @@
+/*
+ * Copyright (c) 2008-2018 Haulmont.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.haulmont.demo.jpawebapi.api;
 
-import com.haulmont.addon.jpawebapi.api.XMLConverter;
 import com.haulmont.bali.util.Dom4j;
 import com.haulmont.demo.jpawebapi.core.app.PortalTestService;
 import com.meterware.httpunit.*;
@@ -35,7 +51,7 @@ public class DataServiceControllerFT {
     private static final String DB_PASSWORD = "";
 
     private static final String URI_BASE = "http://localhost:8080/";
-    private static final String apiPath = "app-portal/jpawebapi";
+    private static final String apiPath = "app-portal/api";
 
     private static final String userLogin = "admin";
     private static final String userPassword = "admin";
@@ -113,12 +129,12 @@ public class DataServiceControllerFT {
         String json = prepareFile("new_driver.json", MapUtils.asMap(
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-jpademo_Driver-" + firstId)
         );
-        WebResponse response = POST(apiPath + "/api/commit?" + "s=" + sessionId, json,
+        WebResponse response = POST(apiPath + "/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("jpademo_Driver-" + firstId, res.getJSONObject(0).get("id"));
 
-        response = GET(apiPath + "/api/find.json?e=jpademo_Driver-" + firstId + "&s=" + sessionId,
+        response = GET(apiPath + "/find.json?e=jpademo_Driver-" + firstId + "&s=" + sessionId,
                 "charset=UTF-8");
         JSONObject entity = new JSONObject(response.getText());
         assertEquals("Test_First_Name", entity.getString("firstName"));
@@ -131,7 +147,7 @@ public class DataServiceControllerFT {
                 "$ENTITY-TO_BE_REPLACED_ID$", "NEW-jpademo_Driver-" + secondId
         ));
 
-        WebResponse response = POST(apiPath + "/api/commit?" + "s=" + sessionId, xml,
+        WebResponse response = POST(apiPath + "/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceNodes = document.selectNodes("/instances/instance");
@@ -141,7 +157,7 @@ public class DataServiceControllerFT {
         assertFieldValueEquals("Test_Last_Name", instanceEl, "lastName");
         assertFieldValueEquals("12", instanceEl, "age");
 
-        response = GET(apiPath + "/api/find.xml?e=jpademo_Driver-" + secondId + "&s=" + sessionId,
+        response = GET(apiPath + "/find.xml?e=jpademo_Driver-" + secondId + "&s=" + sessionId,
                 "charset=UTF-8");
         document = Dom4j.readDocument(response.getText());
         instanceNodes = document.selectNodes("/instances/instance");
@@ -153,7 +169,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_commit_remove_instance_JSON() throws Exception {
-        WebResponse response = GET(apiPath + "/api/find.json?e=jpademo_Driver-" + firstId + "&s=" + sessionId,
+        WebResponse response = GET(apiPath + "/find.json?e=jpademo_Driver-" + firstId + "&s=" + sessionId,
                 "charset=UTF-8");
         assertNotNull(response.getText());
         assertFalse(response.getText().isEmpty());
@@ -165,14 +181,14 @@ public class DataServiceControllerFT {
                 )
         );
 
-        response = POST(apiPath + "/api/commit?" + "s=" + sessionId, json,
+        response = POST(apiPath + "/commit?" + "s=" + sessionId, json,
                 "application/json;charset=UTF-8");
         JSONArray res = new JSONArray(response.getText());
         assertEquals("jpademo_Driver-" + firstId, res.getJSONObject(0).getString("id"));
         assertFalse(res.getJSONObject(0).isNull("version"));
 
         try {
-            GET(apiPath + "/api/find.json?e=jpademo_Driver-" + firstId + "&s=" + sessionId,
+            GET(apiPath + "/find.json?e=jpademo_Driver-" + firstId + "&s=" + sessionId,
                     "text/xml;charset=UTF-8");
             fail();
         } catch (HttpNotFoundException e) {
@@ -181,7 +197,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_commit_remove_instance_XML() throws Exception {
-        WebResponse response = GET(apiPath + "/api/find.xml?e=jpademo_Driver-" + secondId + "&s=" + sessionId,
+        WebResponse response = GET(apiPath + "/find.xml?e=jpademo_Driver-" + secondId + "&s=" + sessionId,
                 "charset=UTF-8");
         assertNotNull(response.getText());
 
@@ -193,7 +209,7 @@ public class DataServiceControllerFT {
                         secondId
                 )
         );
-        response = POST(apiPath + "/api/commit?" + "s=" + sessionId, xml,
+        response = POST(apiPath + "/commit?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceElements = document.selectNodes("/instances/instance");
@@ -204,7 +220,7 @@ public class DataServiceControllerFT {
         assertFieldValueEquals("admin", instanceEl, "deletedBy");
 
         exception.expect(HttpNotFoundException.class);
-        GET(apiPath + "/api/find.xml?e=jpademo_Driver-" + secondId + "&s=" + sessionId,
+        GET(apiPath + "/find.xml?e=jpademo_Driver-" + secondId + "&s=" + sessionId,
                 "charset=UTF-8");
     }
 
@@ -216,7 +232,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_find_driver_JSON() throws Exception {
-        WebResponse response = GET(apiPath + "/api/find.json?e=jpademo_Driver-" + thirdId + "&s=" + sessionId,
+        WebResponse response = GET(apiPath + "/find.json?e=jpademo_Driver-" + thirdId + "&s=" + sessionId,
                 "charset=UTF-8");
         JSONObject entity = new JSONObject(response.getText());
         assertEquals("jpademo_Driver-" + thirdId, entity.getString("id"));
@@ -224,7 +240,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_find_driver_XML() throws Exception {
-        WebResponse response = GET(apiPath + "/api/find.xml?e=jpademo_Driver-" + thirdId + "&s=" + sessionId,
+        WebResponse response = GET(apiPath + "/find.xml?e=jpademo_Driver-" + thirdId + "&s=" + sessionId,
                 "charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceNodes = document.selectNodes("/instances/instance");
@@ -254,8 +270,8 @@ public class DataServiceControllerFT {
         WebResponse response = invokeServiceMethodGet("xml", "findEntityById", thirdId);
         Document document = Dom4j.readDocument(response.getText());
         Element rootElement = document.getRootElement();
-        Element instances = rootElement.element(XMLConverter.ROOT_ELEMENT_INSTANCE);
-        List<Element> instanceList = Dom4j.elements(instances, XMLConverter.ELEMENT_INSTANCE);
+        Element instances = rootElement.element("instances");
+        List<Element> instanceList = Dom4j.elements(instances, "instance");
         assertEquals(1, instanceList.size());
         Element instance = instanceList.get(0);
         assertEquals("jpademo_Driver-" + thirdId, instance.attributeValue("id"));
@@ -286,8 +302,8 @@ public class DataServiceControllerFT {
 
         Document document = Dom4j.readDocument(response.getText());
         Element rootElement = document.getRootElement();
-        Element instancesEl = rootElement.element(XMLConverter.ROOT_ELEMENT_INSTANCE);
-        List<Element> instanceList = Dom4j.elements(instancesEl, XMLConverter.ELEMENT_INSTANCE);
+        Element instancesEl = rootElement.element("instances");
+        List<Element> instanceList = Dom4j.elements(instancesEl, "instance");
         assertEquals(dataSet.getIdPool().size(), instanceList.size());
 
         List<String> entitiesIdentifiersFromDB =
@@ -391,7 +407,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_get_query_JSON() throws Exception {
-        String url = apiPath + "/api/query.json?e=jpademo_Driver&q=select c from jpademo_Driver c where c.id = :id&id=" + thirdId + "&s=" + sessionId;
+        String url = apiPath + "/query.json?e=jpademo_Driver&q=select c from jpademo_Driver c where c.id = :id&id=" + thirdId + "&s=" + sessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         JSONArray entities = new JSONArray(response.getText());
         assertEquals(1, entities.length());
@@ -400,7 +416,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_post_query_JSON() throws Exception {
-        String url = apiPath + "/api/query?s=" + sessionId;
+        String url = apiPath + "/query?s=" + sessionId;
 
         Map<String, Object> content = new HashMap<>();
         content.put("entity", "jpademo_Driver");
@@ -421,7 +437,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_get_query_XML() throws IOException, SAXException {
-        String url = apiPath + "/api/query.xml?e=jpademo_Driver&q=select c from jpademo_Driver c where c.id = :id&id=" + thirdId + "&s=" + sessionId;
+        String url = apiPath + "/query.xml?e=jpademo_Driver&q=select c from jpademo_Driver c where c.id = :id&id=" + thirdId + "&s=" + sessionId;
         WebResponse response = GET(url, "charset=UTF-8");
         Document document = Dom4j.readDocument(response.getText());
         List instanceNodes = document.selectNodes("/instances/instance");
@@ -432,7 +448,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_post_query_XML() throws IOException, SAXException {
-        String url = apiPath + "/api/query?s=" + sessionId;
+        String url = apiPath + "/query?s=" + sessionId;
         String xml = prepareFile("query-entity.xml",
                 MapUtils.asMap(
                         "$ENTITY-TO_BE_REPLACED_ID$", "jpademo_Driver",
@@ -459,10 +475,10 @@ public class DataServiceControllerFT {
     @Test
     public void test_deployViews() throws Exception {
         String xml = prepareFile("new_views.xml", Collections.EMPTY_MAP);
-        POST(apiPath + "/api/deployViews?" + "s=" + sessionId, xml,
+        POST(apiPath + "/deployViews?" + "s=" + sessionId, xml,
                 "text/xml;charset=UTF-8");
 
-        WebResponse response = GET(apiPath + "/api/find.xml?e=jpademo_Driver-" + thirdId + "&s=" + sessionId,
+        WebResponse response = GET(apiPath + "/find.xml?e=jpademo_Driver-" + thirdId + "&s=" + sessionId,
                 "charset=UTF-8");
         assertNotNull(response.getText());
 
@@ -470,7 +486,7 @@ public class DataServiceControllerFT {
         Element entity = (Element) document.selectSingleNode("instances/instance");
         assertFieldValueEquals("TestFirstName", entity, "firstName");
 
-        response = GET(apiPath + "/api/find.xml?e=jpademo_Driver-" + thirdId + "-test.minimal&s=" + sessionId,
+        response = GET(apiPath + "/find.xml?e=jpademo_Driver-" + thirdId + "-test.minimal&s=" + sessionId,
                 "charset=UTF-8");
         assertNotNull(response.getText());
         document = Dom4j.readDocument(response.getText());
@@ -487,7 +503,7 @@ public class DataServiceControllerFT {
 
     @Test
     public void test_printDomain() throws IOException, SAXException {
-        WebResponse response = GET(apiPath + "/api/printDomain?" + "s=" + sessionId,
+        WebResponse response = GET(apiPath + "/printDomain?" + "s=" + sessionId,
                 "text/html;charset=UTF-8");
         String txt = response.getText();
         assertTrue(txt.contains("<h1>Domain model description</h1>"));
@@ -499,7 +515,7 @@ public class DataServiceControllerFT {
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST(apiPath + "/api/login",
+        WebResponse response = POST(apiPath + "/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }
@@ -508,7 +524,7 @@ public class DataServiceControllerFT {
         if (sessionId == null)
             return;
         try {
-            GET(apiPath + "/api/logout?session=" + sessionId, "charset=UTF-8");
+            GET(apiPath + "/logout?session=" + sessionId, "charset=UTF-8");
         } catch (Exception e) {
             System.out.println("Error on logout: " + e);
         }
@@ -538,7 +554,7 @@ public class DataServiceControllerFT {
         String serviceName = PortalTestService.NAME;
         StringBuilder sb = new StringBuilder();
         sb.append(apiPath);
-        sb.append("/api/service.").append(type);
+        sb.append("/service.").append(type);
         sb.append("?s=").append(sessionId)
                 .append("&service=").append(serviceName)
                 .append("&method=").append(methodName);
@@ -552,7 +568,7 @@ public class DataServiceControllerFT {
     private WebResponse invokeServiceMethodPost(String fileName, Map<String, String> replacements, String type) throws IOException, SAXException {
         StringBuilder sb = new StringBuilder();
         sb.append(apiPath);
-        sb.append("/api/service")
+        sb.append("/service")
                 .append("?s=").append(sessionId);
         String fileContent = getFileContent(fileName, replacements);
         return POST(sb.toString(), fileContent, type);
