@@ -44,7 +44,7 @@ public class LoginServiceControllerFT {
         loginJSON.put("password", "admin");
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("app-portal/jpawebapi/api/login",
+        WebResponse response = POST("app-portal/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         String sessionId = response.getText();
         assertNotNull(sessionId);
@@ -62,7 +62,7 @@ public class LoginServiceControllerFT {
             content += URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.name()) + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.name()) +"&";
         }
 
-        WebResponse response = POST("/app-portal/jpawebapi/api/login",
+        WebResponse response = POST("/app-portal/api/login",
                 content, "application/x-www-form-urlencoded;charset=UTF-8");
         String sessionId = response.getText();
         assertNotNull(sessionId);
@@ -71,7 +71,7 @@ public class LoginServiceControllerFT {
     @Test
     public void login_GET() throws Exception {
         String content = "?u=admin&p=" + "admin" + "&l=ru";
-        WebResponse response = GET("app-portal/jpawebapi/api/login" + content);
+        WebResponse response = GET("app-portal/api/login" + content);
         String sessionId = response.getText();
         assertNotNull(sessionId);
     }

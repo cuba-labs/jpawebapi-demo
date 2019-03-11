@@ -46,7 +46,7 @@ public class FileControllerFT {
         loginJSON.put("password", password);
         loginJSON.put("locale", "ru");
 
-        WebResponse response = POST("app-portal/jpawebapi/api/login",
+        WebResponse response = POST("app-portal/api/login",
                 loginJSON.toString(), "application/json;charset=UTF-8");
         return response.getText();
     }
@@ -55,7 +55,7 @@ public class FileControllerFT {
         if (sessionId == null)
             return;
         try {
-            GET("app-portal/jpawebapi/api/logout?session=" + sessionId, "charset=UTF-8");
+            GET("app-portal/api/logout?session=" + sessionId, "charset=UTF-8");
         } catch (Exception e) {
             System.out.println("Error on logout: " + e);
         }
@@ -78,21 +78,21 @@ public class FileControllerFT {
         ByteArrayInputStream is = new ByteArrayInputStream(content.getBytes());
 
         WebResponse response = conv.sendRequest(new PostMethodWebRequest(
-                URI_BASE + "app-portal/jpawebapi/api/upload?" + "s=" + sessionId + "&name=test.txt&ext=txt&size=" + content.length(),
+                URI_BASE + "app-portal/api/upload?" + "s=" + sessionId + "&name=test.txt&ext=txt&size=" + content.length(),
                 is,
                 "application/octet-stream"));
 
         String fileDescrId = response.getText();
 
         response = conv.sendRequest(new GetMethodWebRequest(
-                URI_BASE + "app-portal/jpawebapi/api/download?" + "s=" + sessionId + "&f=" + fileDescrId));
+                URI_BASE + "app-portal/api/download?" + "s=" + sessionId + "&f=" + fileDescrId));
 
         String text = response.getText();
 
         assertEquals(content, text);
 
 //        check FileDescriptor
-        response = GET("app-portal/jpawebapi/api/find.json?e=sys$FileDescriptor-" + fileDescrId + "&s=" + sessionId,
+        response = GET("app-portal/api/find.json?e=sys$FileDescriptor-" + fileDescrId + "&s=" + sessionId,
                 "charset=UTF-8");
         JSONObject fd = new JSONObject(response.getText());
         assertEquals(content.length(), fd.getLong("size"));

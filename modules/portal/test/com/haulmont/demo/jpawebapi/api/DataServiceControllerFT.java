@@ -1,7 +1,7 @@
 package com.haulmont.demo.jpawebapi.api;
 
-import com.haulmont.addon.jpawebapi.api.XMLConverter;
 import com.haulmont.bali.util.Dom4j;
+import com.haulmont.cuba.restapi.XMLConverter;
 import com.haulmont.demo.jpawebapi.core.app.PortalTestService;
 import com.meterware.httpunit.*;
 import org.apache.commons.io.IOUtils;
@@ -35,7 +35,7 @@ public class DataServiceControllerFT {
     private static final String DB_PASSWORD = "";
 
     private static final String URI_BASE = "http://localhost:8080/";
-    private static final String apiPath = "app-portal/jpawebapi";
+    private static final String apiPath = "app-portal/api";
 
     private static final String userLogin = "admin";
     private static final String userPassword = "admin";
