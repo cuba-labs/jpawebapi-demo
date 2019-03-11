@@ -18,7 +18,6 @@
 package com.haulmont.demo.jpawebapi.api;
 
 import com.haulmont.bali.util.Dom4j;
-import com.haulmont.cuba.restapi.XMLConverter;
 import com.haulmont.demo.jpawebapi.core.app.PortalTestService;
 import com.meterware.httpunit.*;
 import org.apache.commons.io.IOUtils;
