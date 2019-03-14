@@ -1,20 +1,20 @@
-
 buildscript {
-    ext.cubaVersion = '7.0.0'
+    ext.cubaVersion = '7.1-SNAPSHOT'
     repositories {
         mavenLocal()
+        jcenter()
 
-        if (System.getenv('HAULMONT_REPOSITORY_URL')) {
-            maven {
-                credentials {
-                    username System.getenv('HAULMONT_REPOSITORY_USER')
-                    password System.getenv('HAULMONT_REPOSITORY_PASSWORD')
-                }
-                url System.getenv('HAULMONT_REPOSITORY_URL')
+        /*
+         * maven { url "https://dl.bintray.com/cuba-platform/main" }
+         * 
+         * TODO: temprorary - use Bintray later
+         */
+        maven {
+            url 'https://repo.cuba-platform.com/content/groups/work'
+            credentials {
+                username 'cuba'
+                password 'cuba123'
             }
-        } else {
-            jcenter()
-            maven { url "https://dl.bintray.com/cuba-platform/main" }
         }
     }
     dependencies {
@@ -51,7 +51,7 @@ dependencies {
     appComponent("com.haulmont.addon.jpawebapi:jpawebapi-global:0.1-SNAPSHOT")
 }
 
-def hsql = 'org.hsqldb:hsqldb:2.2.9'
+def hsql = 'org.hsqldb:hsqldb:2.4.1'
 
 configure([globalModule, coreModule, webModule, portalModule]) {
     apply(plugin: 'java')
