@@ -3,10 +3,9 @@
  * Use is subject to license terms, see http://www.cuba-platform.com/commercial-software-license for details.
  */
 buildscript {
-    ext.cubaVersion = '7.0-SNAPSHOT'
+    ext.cubaVersion = '7.1-SNAPSHOT'
     repositories {
         mavenLocal()
-
         if (System.getenv('HAULMONT_REPOSITORY_URL')) {
             maven {
                 credentials {
@@ -17,11 +16,21 @@ buildscript {
             }
         } else {
             jcenter()
-            maven { url "https://dl.bintray.com/cuba-platform/main" }
+
+            /*maven { url "https://dl.bintray.com/cuba-platform/main" }*/
+
+            maven {
+                url 'https://repo.cuba-platform.com/content/groups/work'
+                credentials {
+                    username 'cuba'
+                    password 'cuba123'
+                }
+            }
         }
     }
     dependencies {
         classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
+        classpath "com.haulmont.gradle:addon-gradle-plugin:1.0.3"
     }
 }
 
@@ -103,6 +112,10 @@ task prepareTest(dependsOn: [dropTomcat, coreModule.assemble, webModule.assemble
     doLast {
         // Setup
         setupTomcat.execute()
+
+        // Test configuration
+        enableTestProperties.execute()
+        enableRemoteJmx.execute()
         
         // Deploy
         coreModule.deploy.execute()
