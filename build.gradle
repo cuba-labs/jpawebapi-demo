@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2008-2019 Haulmont.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 buildscript {
     ext.cubaVersion = '7.1-SNAPSHOT'
     repositories {
@@ -51,6 +68,23 @@ cuba {
     tomcat {
         dir = "$project.rootDir/deploy/tomcat"
     }
+    ide {
+        vcs = 'Git'
+        copyright = '''Copyright (c) 2008-$today.year Haulmont.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+'''
+    }
 }
 
 dependencies {
@@ -89,7 +123,6 @@ configure(globalModule) {
 }
 
 configure(coreModule) {
-
     configurations {
         jdbc
         dbscripts
@@ -118,10 +151,12 @@ configure(coreModule) {
         appJars(modulePrefix + '-global', modulePrefix + '-core')
     }
 
+    def appDbName = 'jpademo'
+
     task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
         dbms = 'hsql'
         host = 'localhost'
-        dbName = 'jpademo'
+        dbName = appDbName
         dbUser = 'sa'
         dbPassword = ''
     }
@@ -129,9 +164,17 @@ configure(coreModule) {
     task updateDb(dependsOn: assembleDbScripts, description: 'Updates local database', type: CubaDbUpdate) {
         dbms = 'hsql'
         host = 'localhost'
-        dbName = 'jpademo'
+        dbName = appDbName
         dbUser = 'sa'
         dbPassword = ''
+    }
+
+    task startDb(description: 'Starts local HSQLDB server', type: CubaHsqlStart) {
+        dbName = appDbName
+    }
+
+    task stopDb(description: 'Stops local HSQLDB server', type: CubaHsqlStop) {
+        dbName = appDbName
     }
 }
 
@@ -189,44 +232,16 @@ configure(portalModule) {
         compile(globalModule)
 
         testCompile("httpunit:httpunit:1.7")
-//        testCompile('org.postgresql:postgresql:42.2.4')
         testCompile("rhino:js:1.7R2")
+        testCompile("jaxen:jaxen:1.1.6")
         testRuntime(hsql)
     }
 
     def webappName = "${modulePrefix}-portal"
-    def resourcesDir = "$cuba.tomcat.dir/webapps/$webappName/resources"
-    def ftlDir = "$cuba.tomcat.dir/webapps/$webappName/WEB-INF/templates"
 
     task deploy(dependsOn: assemble, type: CubaDeployment) {
         appName = webappName
         appJars(modulePrefix + '-global', modulePrefix + '-portal')
-    }
-
-    task deployStatic() {
-        doLast {
-            copy {
-                from file('web/resources')
-                include '**/*.css'
-                include '**/*.js'
-                include '**/*.png'
-                include '**/*.gif'
-                include '**/*.jpg'
-                into resourcesDir
-            }
-            copy {
-                from file('web/WEB-INF/templates')
-                include '**/*.ftl'
-                into ftlDir
-            }
-        }
-    }
-
-    task cleanStatic() {
-        doLast {
-            delete resourcesDir
-            delete ftlDir
-        }
     }
 
     task webArchive(type: Zip) {
@@ -250,7 +265,8 @@ task undeploy(type: Delete, dependsOn: ":${modulePrefix}-web:cleanConf") {
     delete("$cuba.tomcat.dir/webapps/${modulePrefix}-portal")
 }
 
-task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefix}-web:deploy", ":${modulePrefix}-portal:deploy"], description: 'Redeploys applications and restarts local Tomcat') {
+task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefix}-web:deploy", ":${modulePrefix}-portal:deploy"],
+        description: 'Redeploys applications and restarts local Tomcat') {
     doLast {
         ant.waitfor(maxwait: 6, maxwaitunit: 'second', checkevery: 2, checkeveryunit: 'second') {
             not {
@@ -260,4 +276,3 @@ task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefi
         start.execute()
     }
 }
-

@@ -1,7 +1,20 @@
 /*
- * Copyright (c) 2008-2016 Haulmont. All rights reserved.
- * Use is subject to license terms, see http://www.cuba-platform.com/commercial-software-license for details.
+ * Copyright (c) 2008-2019 Haulmont.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
  */
+
 buildscript {
     ext.cubaVersion = '7.1-SNAPSHOT'
     repositories {
@@ -42,49 +55,7 @@ def coreModule = project(":${modulePrefix}-core")
 def webModule = project(":${modulePrefix}-web")
 def portalModule = project(":${modulePrefix}-portal")
 
-def coreJarNames = ['cuba-global', 'cuba-core',
-                    'app-global', 'app-core']
-
-configure(coreModule) {
-
-    assembleDbScripts { moduleAlias = '30-app' }
-
-    // HSQLDB stuff
-    def hsqlDbName = 'jpademo'
-
-    task startHsqlDb(description: 'Starts local HSQLDB server', type: CubaHsqlStart) {
-        dbName = hsqlDbName
-    }
-
-    task stopHsqlDb(description: 'Stops local HSQLDB server', type: CubaHsqlStop) {
-        dbName = hsqlDbName
-    }
-
-    task killHsqlDb(description: 'Kill local HSQLDB server process running on port 9001', type: CubaKillProcess) {
-        port = 9001
-    }
-
-    task removeHsqlDb(description: 'Removes local HSQL database', type: Delete) {
-        delete new File("$rootProject.projectDir/data")
-    }
-
-    task createHsqlDb(dependsOn: assembleDbScripts, description: 'Creates local HSQL database', type: CubaDbCreation) {
-        dbms = 'hsql'
-        dbName = hsqlDbName
-        dbUser = 'sa'
-        dbPassword = ''
-    }
-
-    task updateHsqlDb(dependsOn: assembleDbScripts, description: 'Updates local HSQL database', type: CubaDbUpdate) {
-        dbms = 'hsql'
-        dbName = hsqlDbName
-        dbUser = 'sa'
-        dbPassword = ''
-    }
-}
-
 configure(portalModule) {
-
     task funcTest(dependsOn: ':prepareTest', description: 'Run functional tests', type: Test) {
         scanForTestClasses = false
         includes = ['**/*FT.class']
@@ -92,19 +63,31 @@ configure(portalModule) {
     }
 }
 
-task clearConf(description: 'Clears conf directory') {
+task prepareTest(description: 'Prepare server for tests', dependsOn: [
+        setupTomcat,
+        coreModule.createDb,
+        coreModule.deploy,
+        webModule.deploy,
+        portalModule.deploy]) {
+
     doLast {
-        def dir = new File(cuba.tomcat.dir, '/conf/app')
-        if (dir.isDirectory()) {
-            ant.delete(includeemptydirs: true) {
-                fileset(dir: dir, includes: '**/*', excludes: 'local.app.properties')
-            }
+        // Test configuration
+        enableTestProperties.execute()
+        enableRemoteJmx.execute()
+
+        // Start server
+        start.execute()
+
+        ant.waitfor(maxwait: 30, maxwaitunit: 'second', checkevery: 2, checkeveryunit: 'second') {
+            http(url: "http://localhost:8080/app")
+        }
+
+        // Delete out directory
+        File dir = new File("$projectDir/tests/ui/out")
+        if (dir.exists()) {
+            project.delete(dir)
         }
     }
-}
-
-task stopTomcatAfterTest(type: CubaStopTomcat, description: 'Stops Tomcat after functional tests') {
-    tomcatRootDir = cuba.tomcat.dir
 }
 
 task enableRemoteJmx() {
@@ -141,36 +124,6 @@ JPDA_OPTS="-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
     }
 }
 
-task prepareTest(dependsOn: [dropTomcat, coreModule.assemble, webModule.assemble, portalModule.assemble],
-        description: 'Prepare server for tests') {
-    doLast {
-        // Setup
-        setupTomcat.execute()
-
-        // Test configuration
-        enableTestProperties.execute()
-        enableRemoteJmx.execute()
-        
-        // Deploy
-        coreModule.deploy.execute()
-        webModule.deploy.execute()
-        portalModule.deploy.execute()
-        // Create DB
-        coreModule.createDb.execute()
-        // Start server
-        start.execute()
-
-        ant.waitfor(maxwait: 30, maxwaitunit: 'second', checkevery: 2, checkeveryunit: 'second') {
-            http(url: "http://localhost:8080/app")
-        }
-        // Delete out directory
-        File dir = new File("$projectDir/tests/ui/out")
-        if (dir.exists()) {
-            project.delete(dir)
-        }
-    }
-}
-
 task enableTestProperties() {
     doLast {
         project.file("${cuba.tomcat.dir}/conf/app-core/").mkdirs()
@@ -189,59 +142,7 @@ cuba.rest.ldap.userLoginField = cn
     }
 }
 
-/* ============= Cluster testing =============== */
-
-def tomcat1Dir = cuba.tomcat.dir + '1'
-def tomcat2Dir = cuba.tomcat.dir + '2'
-
-task setupTomcat1(type: CubaSetupTomcat) {
-    tomcatRootDir = tomcat1Dir
-}
-
-task setupTomcat2(type: CubaSetupTomcat) {
-    tomcatRootDir = tomcat2Dir
-}
-
-task dropTomcat1(type: CubaDropTomcat) {
-    tomcatRootDir = tomcat1Dir
-    listeningPort = 18787
-}
-
-task dropTomcat2(type: CubaDropTomcat) {
-    tomcatRootDir = tomcat2Dir
-    listeningPort = 28787
-}
-
-task dropTomcatDemo(type: CubaDropTomcat) {
-    tomcatRootDir = cuba.tomcat.dir
-    listeningPort = Integer.valueOf('97' + (rootProject.hasProperty('demoToken') ? rootProject['demoToken'] : '00'))
-}
-
-task startTomcat1(type: CubaStartTomcat) {
-    tomcatRootDir = tomcat1Dir
-}
-
-task startTomcat2(type: CubaStartTomcat) {
-    tomcatRootDir = tomcat2Dir
-}
-
-configure(coreModule) {
-    task deploy1(dependsOn: assemble, type: CubaDeployment) {
-        tomcatRootDir = tomcat1Dir
-        appName = 'app-core'
-        jarNames = coreJarNames
-    }
-}
-
-configure(webModule) {
-    task deploy1(dependsOn: assemble, type: CubaDeployment) {
-        tomcatRootDir = tomcat1Dir
-        appName = 'app'
-        jarNames = ['app-global', 'app-web']
-    }
-}
-
-//==============Deploy reports==============
+// Deployment testing
 
 task buildWar(type: CubaWarBuilding) {
     appHome = '${catalina.base}/work/app_home'
@@ -256,6 +157,12 @@ task buildSingleWar(type: CubaWarBuilding) {
     coreContextXmlPath = 'modules/core/web/META-INF/single-war-context.xml'
     includeJdbcDriver = true
     includeContextXml = true
+}
+
+task copyWarToTomcat(type: Copy) {
+    from "${project.buildDir}/distributions/war"
+    include "*.war"
+    into "${cuba.tomcat.dir}/webapps"
 }
 
 task deploySingleWar(dependsOn: buildSingleWar, type: Copy) {
@@ -276,10 +183,3 @@ task buildSingleUberJar(type: CubaUberJarBuilding) {
     singleJar = true
     logbackConfigurationFile = "test-deployment/logback.xml"
 }
-
-task copyWarToTomcat(type: Copy) {
-    from "${project.buildDir}/distributions/war"
-    include "*.war"
-    into "${cuba.tomcat.dir}/webapps"
-}
-
