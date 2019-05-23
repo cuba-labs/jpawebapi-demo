@@ -29,6 +29,8 @@ import org.json.JSONObject;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runners.MethodSorters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
@@ -45,6 +47,8 @@ import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DataServiceControllerFT {
+
+    private static final Logger log = LoggerFactory.getLogger(DataServiceControllerFT.class);
 
     private static final String DB_URL = "jdbc:hsqldb:hsql://localhost:9001/jpademo";
     private static final String DB_LOGIN = "sa";
@@ -530,9 +534,17 @@ public class DataServiceControllerFT {
         }
     }
 
-    private WebResponse POST(String uri, String s, String contentType) throws IOException, SAXException {
+    private WebResponse POST(String uri, String s, String contentType) {
         ByteArrayInputStream is = new ByteArrayInputStream(s.getBytes());
-        return webConversation.sendRequest(new PostMethodWebRequest(URI_BASE + uri, is, contentType));
+
+        WebResponse webResponse = null;
+        try {
+            webResponse = webConversation.sendRequest(new PostMethodWebRequest(URI_BASE + uri, is, contentType));
+        } catch (IOException | SAXException e) {
+            log.error("An error occurred while performing POST request", e);
+        }
+
+        return webResponse;
     }
 
     private WebResponse GET(String uri, String acceptedFormat) throws IOException, SAXException {
@@ -546,7 +558,7 @@ public class DataServiceControllerFT {
             for (int i = 0; i < params.length; i++) {
                 stmt.setObject(i + 1, params[i]);
             }
-            int count = stmt.executeUpdate();
+            stmt.executeUpdate();
         }
     }
 
