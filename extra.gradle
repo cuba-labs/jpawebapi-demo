@@ -71,10 +71,6 @@ task prepareTest(description: 'Prepare server for tests', dependsOn: [
         portalModule.deploy]) {
 
     doLast {
-        // Test configuration
-        enableTestProperties.execute()
-        enableRemoteJmx.execute()
-
         // Start server
         start.execute()
 
@@ -87,58 +83,6 @@ task prepareTest(description: 'Prepare server for tests', dependsOn: [
         if (dir.exists()) {
             project.delete(dir)
         }
-    }
-}
-
-task enableRemoteJmx() {
-    doLast {
-        project.file("${cuba.tomcat.dir}/bin/setenv.bat").text = '''
-set CATALINA_OPTS=-Xmx512m -Dfile.encoding=UTF-8
-
-set CATALINA_OPTS=%CATALINA_OPTS% -Dlogback.configurationFile=../conf/logback.xml
-
-set CATALINA_OPTS=%CATALINA_OPTS% -Dcom.sun.management.jmxremote 
-set CATALINA_OPTS=%CATALINA_OPTS% -Djava.rmi.server.hostname=localhost 
-set CATALINA_OPTS=%CATALINA_OPTS% -Dcom.sun.management.jmxremote.port=7777 
-set CATALINA_OPTS=%CATALINA_OPTS% -Dcom.sun.management.jmxremote.ssl=false 
-set CATALINA_OPTS=%CATALINA_OPTS% -Dcom.sun.management.jmxremote.authenticate=false
-
-set JPDA_OPTS=-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n
-'''
-
-        project.file("${cuba.tomcat.dir}/bin/setenv.sh").text = '''
-CATALINA_OPTS="-Xmx512m -Dfile.encoding=UTF-8"
-
-CATALINA_OPTS="$CATALINA_OPTS -Dlogback.configurationFile=../conf/logback.xml"
-
-CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote"
-
-CATALINA_OPTS="$CATALINA_OPTS \\
--Djava.rmi.server.hostname=localhost \\
--Dcom.sun.management.jmxremote.port=7777 \\
--Dcom.sun.management.jmxremote.ssl=false \\
--Dcom.sun.management.jmxremote.authenticate=false"
-
-JPDA_OPTS="-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
-'''
-    }
-}
-
-task enableTestProperties() {
-    doLast {
-        project.file("${cuba.tomcat.dir}/conf/app-core/").mkdirs()
-        project.file("${cuba.tomcat.dir}/conf/app-core/local.app.properties").text = '''
-refapp.core.embeddedLdap.startTcpServer = true
-'''
-        project.file("${cuba.tomcat.dir}/conf/app-portal/").mkdirs()
-        project.file("${cuba.tomcat.dir}/conf/app-portal/local.app.properties").text = '''
-cuba.rest.ldap.enabled = true
-cuba.rest.ldap.urls = ldap://localhost:10389
-cuba.rest.ldap.base = dc=example,dc=com
-cuba.rest.ldap.user = cn=refapp,dc=example,dc=com
-cuba.rest.ldap.password = refapp
-cuba.rest.ldap.userLoginField = cn
-'''
     }
 }
 
