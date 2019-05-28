@@ -63,6 +63,18 @@ configure(portalModule) {
     }
 }
 
+configure(webModule) {
+    task testPortalStart(type: Test, dependsOn: testClasses) {
+        include("com/haulmont/demo/jpawebapi/DeploymentPortalTest.class")
+        systemProperties = System.getProperties()
+    }
+
+    task testWebStart(type: Test, dependsOn: testClasses) {
+        include("com/haulmont/demo/jpawebapi/DeploymentWebTest.class")
+        systemProperties = System.getProperties()
+    }
+}
+
 task prepareTest(description: 'Prepare server for tests', dependsOn: [
         setupTomcat,
         coreModule.createDb,

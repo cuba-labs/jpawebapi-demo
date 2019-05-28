@@ -9,6 +9,7 @@ import com.haulmont.cuba.core.EntityManager;
 import com.haulmont.cuba.core.Persistence;
 import com.haulmont.cuba.core.Query;
 import com.haulmont.cuba.core.Transaction;
+import com.haulmont.cuba.security.entity.User;
 import com.haulmont.demo.jpawebapi.core.entity.Driver;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,20 @@ public class PortalTestServiceBean implements PortalTestService {
         try {
             EntityManager em = persistence.getEntityManager();
             result = em.createQuery("select c from jpademo_Driver c", Driver.class).getResultList();
+            tx.commit();
+        } finally {
+            tx.end();
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> finAllUsers() {
+        List<User> result;
+        Transaction tx = persistence.createTransaction();
+        try {
+            EntityManager em = persistence.getEntityManager();
+            result = em.createQuery("select c from sec$User c", User.class).getResultList();
             tx.commit();
         } finally {
             tx.end();

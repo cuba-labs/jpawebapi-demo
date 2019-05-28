@@ -15,5 +15,6 @@
         <method name="findEntityById"/>
         <method name="updateFirstName"/>
         <method name="updateFirstNames"/>
+        <method name="finAllUsers"/>
     </service>
 </services>

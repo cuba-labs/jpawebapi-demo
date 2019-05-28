@@ -5,6 +5,7 @@
 
 package com.haulmont.demo.jpawebapi.core.app;
 
+import com.haulmont.cuba.security.entity.User;
 import com.haulmont.demo.jpawebapi.core.entity.Driver;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public interface PortalTestService {
     Driver findEntityById(UUID id);
 
     List<Driver> finAllEntities();
+
+    List<User> finAllUsers();
 
     Driver updateFirstName(UUID id, String newFirstName);
 

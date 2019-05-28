@@ -186,6 +186,10 @@ configure(webModule) {
     dependencies {
         compileOnly(servletApi)
         compile(globalModule)
+
+        testCompile("httpunit:httpunit:1.7")
+        testCompile("rhino:js:1.7R2")
+        testCompile("jaxen:jaxen:1.1.6")
     }
 
     task webArchive(type: Zip) {

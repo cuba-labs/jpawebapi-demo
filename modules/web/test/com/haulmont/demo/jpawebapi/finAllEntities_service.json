@@ -1,0 +1,4 @@
+{
+  "service": "demo_PortalTestService",
+  "method": "finAllUsers"
+}
