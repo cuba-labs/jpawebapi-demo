@@ -27,7 +27,6 @@ import org.dom4j.Document;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
@@ -39,8 +38,8 @@ import static org.junit.Assert.*;
 
 public class RestUtils {
 
-    protected String sessionId;
     protected static WebConversation webConversation;
+    protected String sessionId;
 
     protected void service(String url) throws IOException, SAXException {
         String fileContent = prepareFile("finAllEntities_service.json");

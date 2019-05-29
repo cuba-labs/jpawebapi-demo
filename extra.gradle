@@ -108,9 +108,9 @@ task buildWar(type: CubaWarBuilding) {
 }
 
 task buildSingleWar(type: CubaWarBuilding) {
+    webXmlPath = 'modules/web/web/WEB-INF/single-war-web.xml'
     appHome = '${catalina.base}/work/app_home'
-    webXml = "${project(':app-web').projectDir}/web/WEB-INF/single-app-web.xml"
-    coreContextXmlPath = 'modules/core/web/META-INF/single-war-context.xml'
+    coreContextXmlPath = 'modules/core/web/META-INF/war-context.xml'
     includeJdbcDriver = true
     includeContextXml = true
 }
@@ -137,5 +137,5 @@ task buildSingleUberJar(type: CubaUberJarBuilding) {
     coreJettyEnvPath = 'modules/core/web/META-INF/jetty-env.xml'
     appProperties = ['cuba.automaticDatabaseUpdate': true]
     singleJar = true
-    logbackConfigurationFile = "test-deployment/logback.xml"
+    logbackConfigurationFile = "etc/uber-jar-logback.xml"
 }
