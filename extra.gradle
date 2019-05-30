@@ -63,6 +63,18 @@ configure(portalModule) {
     }
 }
 
+configure(webModule) {
+    task testPortalStart(type: Test, dependsOn: testClasses) {
+        include("com/haulmont/demo/jpawebapi/DeploymentPortalTest.class")
+        systemProperties = System.getProperties()
+    }
+
+    task testWebStart(type: Test, dependsOn: testClasses) {
+        include("com/haulmont/demo/jpawebapi/DeploymentWebTest.class")
+        systemProperties = System.getProperties()
+    }
+}
+
 task prepareTest(description: 'Prepare server for tests', dependsOn: [
         setupTomcat,
         coreModule.createDb,
@@ -96,9 +108,9 @@ task buildWar(type: CubaWarBuilding) {
 }
 
 task buildSingleWar(type: CubaWarBuilding) {
+    webXmlPath = 'modules/web/web/WEB-INF/single-war-web.xml'
     appHome = '${catalina.base}/work/app_home'
-    webXml = "${project(':app-web').projectDir}/web/WEB-INF/single-app-web.xml"
-    coreContextXmlPath = 'modules/core/web/META-INF/single-war-context.xml'
+    coreContextXmlPath = 'modules/core/web/META-INF/war-context.xml'
     includeJdbcDriver = true
     includeContextXml = true
 }
@@ -118,12 +130,12 @@ task buildUberJar(type: CubaUberJarBuilding) {
     coreJettyEnvPath = 'modules/core/web/META-INF/jetty-env.xml'
     appProperties = ['cuba.automaticDatabaseUpdate': true]
     appName = 'app'
-    logbackConfigurationFile = "test-deployment/logback.xml"
+    logbackConfigurationFile = "etc/uber-jar-logback.xml"
 }
 
 task buildSingleUberJar(type: CubaUberJarBuilding) {
     coreJettyEnvPath = 'modules/core/web/META-INF/jetty-env.xml'
     appProperties = ['cuba.automaticDatabaseUpdate': true]
     singleJar = true
-    logbackConfigurationFile = "test-deployment/logback.xml"
+    logbackConfigurationFile = "etc/uber-jar-logback.xml"
 }

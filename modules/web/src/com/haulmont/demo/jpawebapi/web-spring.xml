@@ -8,4 +8,12 @@
     
     <gui:screens base-packages="com.haulmont.demo.jpawebapi.web"/>
 
+    <bean id="demo_proxyCreator" class="com.haulmont.cuba.web.sys.remoting.WebRemoteProxyBeanCreator">
+        <property name="serverSelector" ref="cuba_ServerSelector"/>
+        <property name="remoteServices">
+            <map>
+                <entry key="demo_PortalTestService" value="com.haulmont.demo.jpawebapi.core.app.PortalTestService"/>
+            </map>
+        </property>
+    </bean>
 </beans>
