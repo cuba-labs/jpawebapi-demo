@@ -17,13 +17,10 @@
 
 package com.haulmont.demo.jpawebapi;
 
-import com.haulmont.bali.util.Dom4j;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.PostMethodWebRequest;
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
-import org.apache.commons.io.IOUtils;
-import org.dom4j.Document;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,20 +28,21 @@ import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class RestUtils {
 
+
     protected static WebConversation webConversation;
     protected String sessionId;
 
     protected void service(String url) throws IOException, SAXException {
-        String fileContent = prepareFile("finAllEntities_service.json");
-        WebResponse response = POST(url, fileContent, "application/json;charset=UTF-8");
+        JSONObject content = new JSONObject();
+        content.put("service", "demo_PortalTestService");
+        content.put("method", "finAllUsers");
 
+        WebResponse response = POST(url, content.toString(), "application/json;charset=UTF-8");
         JSONObject responseObject = new JSONObject(response.getText());
         JSONArray resultObject = responseObject.getJSONArray("result");
 
@@ -53,12 +51,13 @@ public class RestUtils {
     }
 
     protected void query(String url) throws IOException, SAXException {
-        String xml = prepareFile("query-entity.xml");
+        JSONObject content = new JSONObject();
+        content.put("entity", "sec$User");
+        content.put("query", "select c from sec$User c");
 
-        WebResponse response = POST(url, xml, "text/xml;charset=UTF-8");
-        Document document = Dom4j.readDocument(response.getText());
-        List instanceNodes = document.selectNodes("/instances/instance");
-        assertEquals(2, instanceNodes.size());
+        WebResponse response = POST(url, content.toString(), "application/json;charset=UTF-8");
+        JSONArray responseObject = new JSONArray(response.getText());
+        assertEquals(2, responseObject.length());
     }
 
     protected void logoutTest(String urlBase) throws IOException, SAXException, JSONException {
@@ -71,12 +70,6 @@ public class RestUtils {
         }
         assertNull(session);
     }
-
-    protected String prepareFile(String fileName) throws IOException {
-        InputStream is = getClass().getResourceAsStream(fileName);
-        return IOUtils.toString(is);
-    }
-
 
     protected WebResponse GET(String url) throws IOException, SAXException {
         GetMethodWebRequest request = new GetMethodWebRequest(url);
