@@ -16,7 +16,7 @@
  */
 
 buildscript {
-    ext.cubaVersion = '7.1-SNAPSHOT'
+    ext.cubaVersion = '7.1.1'
     repositories {
         mavenLocal()
         if (System.getenv('HAULMONT_REPOSITORY_URL')) {
@@ -89,7 +89,7 @@ limitations under the License.
 
 dependencies {
     appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
-    appComponent("com.haulmont.addon.jpawebapi:jpawebapi-global:0.1-SNAPSHOT")
+    appComponent("com.haulmont.addon.jpawebapi:jpawebapi-global:1.0-SNAPSHOT")
 }
 
 def hsql = 'org.hsqldb:hsqldb:2.4.1'
