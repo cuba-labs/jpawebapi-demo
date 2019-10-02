@@ -230,6 +230,16 @@ configure(webModule) {
         appName = "${modulePrefix}"
         appJars(modulePrefix + '-global', modulePrefix + '-web')
     }
+
+    task testPortalStart(type: Test, dependsOn: testClasses) {
+        include("com/haulmont/demo/jpawebapi/DeploymentPortalTest.class")
+        systemProperties = System.getProperties()
+    }
+
+    task testWebStart(type: Test, dependsOn: testClasses) {
+        include("com/haulmont/demo/jpawebapi/DeploymentWebTest.class")
+        systemProperties = System.getProperties()
+    }
 }
 
 configure(portalModule) {
@@ -257,12 +267,16 @@ configure(portalModule) {
         classifier = 'web'
     }
 
+    task funcTest(dependsOn: ':prepareTest', description: 'Run functional tests', type: Test) {
+        scanForTestClasses = false
+        includes = ['**/*FT.class']
+        workingDir = "$projectDir/../../"
+    }
+
     artifacts {
         archives webArchive
     }
 }
-
-apply from: 'extra.gradle'
 
 task undeploy(type: Delete, dependsOn: ":${modulePrefix}-web:cleanConf") {
     delete("$cuba.tomcat.dir/shared")
@@ -281,4 +295,71 @@ task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefi
         }
         start.execute()
     }
+}
+
+/* ============= JPA WEB API testing =============== */
+
+task prepareTest(description: 'Prepare server for tests', dependsOn: [
+        setupTomcat,
+        coreModule.createDb,
+        coreModule.deploy,
+        webModule.deploy,
+        portalModule.deploy]) {
+
+    doLast {
+        // Start server
+        start.execute()
+
+        ant.waitfor(maxwait: 30, maxwaitunit: 'second', checkevery: 2, checkeveryunit: 'second') {
+            http(url: "http://localhost:8080/app")
+        }
+
+        // Delete out directory
+        File dir = new File("$projectDir/tests/ui/out")
+        if (dir.exists()) {
+            project.delete(dir)
+        }
+    }
+}
+
+/* ============= Deployment Testing =============== */
+
+task buildWar(type: CubaWarBuilding) {
+    appHome = '${catalina.base}/work/app_home'
+    singleWar = false
+    includeJdbcDriver = true
+    includeContextXml = true
+}
+
+task buildSingleWar(type: CubaWarBuilding) {
+    webXmlPath = 'modules/web/web/WEB-INF/single-war-web.xml'
+    appHome = '${catalina.base}/work/app_home'
+    coreContextXmlPath = 'modules/core/web/META-INF/war-context.xml'
+    includeJdbcDriver = true
+    includeContextXml = true
+}
+
+task copyWarToTomcat(type: Copy) {
+    from "${project.buildDir}/distributions/war"
+    include "*.war"
+    into "${cuba.tomcat.dir}/webapps"
+}
+
+task deploySingleWar(dependsOn: buildSingleWar, type: Copy) {
+    from file("$buildDir/distributions/war/app.war")
+    into file('../tomcat/webapps/')
+}
+
+task buildUberJar(type: CubaUberJarBuilding) {
+    coreJettyEnvPath = 'modules/core/web/META-INF/jetty-env.xml'
+    appProperties = ['cuba.automaticDatabaseUpdate': true]
+    appName = 'app'
+    logbackConfigurationFile = "etc/uber-jar-logback.xml"
+}
+
+task buildSingleUberJar(type: CubaUberJarBuilding) {
+    coreJettyEnvPath = 'modules/core/web/META-INF/jetty-env.xml'
+    appProperties = ['cuba.automaticDatabaseUpdate': true]
+    singleJar = true
+    logbackConfigurationFile = "etc/uber-jar-logback.xml"
 }
